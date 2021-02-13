@@ -1,0 +1,243 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/_anal_template.xhtml">
+    <ui:define name="metaInfo">
+        <f:event type="preRenderView" listener="#{sessionBean1.setAnalType('genelist')}"/> 
+        <f:event type="preRenderView" listener="#{navi.registerPage('Upload Data', '/uploads/ListUploadView.xhtml')}"/> 
+    </ui:define>
+    <ui:define name="content">
+        <p:layout id="layout">
+            <p:layoutUnit position="center" collapsible="true" gutter="0" style="padding:0px; margin: 0px;">
+                <h:panelGrid style="width:100%; line-height: 23px; font-size: 13px; font-family: Arial, Helvetica, Geneva">
+                    <h:panelGrid style="width:90%; padding: 10px 20px 10px 40px">
+                        <h3 style="color: darkblue">
+                            Genes/protein list(s) upload
+                        </h3>
+                        <p>
+                            Please upload one or multiple lists of genes/proteins for network-based analysis and other data visualization, 
+                            with built-in support for various functional enrichment analysis. For first time users, you are advised to explore the features 
+                            using one of our example data sets. 
+                        </p>                     
+                        <h:panelGrid style="padding:10px 80px 10px 100px; line-height: 23px; width:100%; border-style: solid; border-width: 3px; border-color: #fafafa"> 
+                            <h:form id="form">
+                                <h:panelGrid columns="2" style="width:560px; padding:20px 20px 10px 20px">
+                                    <h:panelGrid style="width:200px;">
+                                        <h:outputLabel value="Specify organism" />                       
+                                    </h:panelGrid>
+                                    <p:selectOneMenu id="orgOpt" style="line-height: 21px" value="#{signatureBean.org}" immediate="true">
+                                        <f:selectItems value="#{ctl.organismMap}"/>
+                                        <p:ajax event="change" update=":form:idOpt" />
+                                    </p:selectOneMenu> 
+                                    <h:panelGrid style="width:200px;">
+                                        <h:outputLabel value="Set ID type"/>                   
+                                    </h:panelGrid>
+                                    <p:selectOneMenu id="idOpt" style="line-height: 21px" value="#{signatureBean.geneIDType}">
+                                        <f:selectItems value="#{ctl.geneListIDOpts}"/> 
+                                        <p:ajax event="change"/>
+                                    </p:selectOneMenu>                                    
+                                    <h:panelGrid style="width:200px">
+                                        <h:panelGroup>
+                                            Copy-and-paste one or more gene lists 
+                                            <font style="color:gray">
+                                                (Insert a "//" line to indicate the start of a new gene list, or  
+                                                <p:commandLink value="click here" style="font-weight: bold; color: blue" action="#{uploadBean.openMultiFileDialog()}" update="formMulti"/>
+                                                to upload multiple gene list files)
+                                            </font>
+                                        </h:panelGroup>
+                                        <br/>
+                                        <p:commandLink value="Try Example" onclick="PF('testDataDialog').show();" style="font-weight: bold; font-size: 14px; margin-left: 30px"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid>
+                                        <p:inputTextarea id="listData" autoResize="false" value="#{signatureBean.geneList}" rows="20" cols="40" />
+                                        <p:watermark for="listData" value="For multiple gene lists, add a '//' line to separate different gene lists " id="watermark" />
+                                    </h:panelGrid>
+                                    
+                                    <p:spacer/>
+                                    <p:commandButton value="Upload" style="width:110px; margin-left: 80px"
+                                                     id="procBn"
+                                                     onclick="PF('statusDialog').show();"   
+                                                     icon="ui-icon-circle-arrow-n"
+                                                     oncomplete ="PF('statusDialog').hide();"
+                                                     update =":southform:visBn"
+                                                     action="#{uploadBean.mapGeneListData()}"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </h:panelGrid>
+                <p:dialog modal="true" widgetVar="fileUploadDialog" 
+                          appendTo="@(body)" header="Upload one or multiple gene list files"
+                          draggable="false" closable="true" resizable="true"> 
+                    <h:form enctype="multipart/form-data" id="formMulti">
+                        <h:panelGrid style="width:500px; min-height: 200px; padding:10px; line-height: 21px">
+                            <ul>
+                                <li>
+                                    The same gene ID type must be used across all files; 
+                                </li>
+                                <li>
+                                    All files must have the same number of columns (one or two columns);
+                                </li>
+                                <li>
+                                    All files should be uploaded as text (.txt) format;
+                                </li>
+                                <li>
+                                    At most 15 gene list files can be uploaded
+                                </li>
+                            </ul>
+                            <p:fileUpload value="#{uploadBean.file}" sequential="true"
+                                          listener="#{uploadBean.handleMultiFileUpload}" 
+                                          multiple="true" update="messages" 
+                                          sizeLimit="10000000"  fileLimit="15"
+                                          allowTypes="/(\.|\/)(txt)$/"/>
+                            <p:growl id="messages" showDetail="true" />       
+                        </h:panelGrid>
+                        <h:panelGrid style="width:450px; padding:10px 20px 10px 20px; text-align:center">
+                            <p:commandButton value="Process Uploaded File(s)" style="width:200px"
+                                             id="procBn2"
+                                             onclick="PF('statusDialog').show();"   
+                                             icon="ui-icon-circle-arrow-e"
+                                             oncomplete ="PF('statusDialog').hide();"
+                                             update =":southform:visBn"
+                                             action="#{uploadBean.processMultiFiles()}"/> 
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <p:dialog modal="true" widgetVar="testDataDialog" 
+                          style="line-height: 23px;" 
+                          appendTo="@(body)" header="Example Gene Lists"
+                          draggable="false" closable="false" resizable="true"> 
+                    <h:form>
+                        <p:selectOneRadio id="customRadio" value="#{signatureBean.exampleGeneList}" layout="custom">  
+                            <f:selectItem itemLabel="Endotoxin tolerance (Human)" itemValue="endo"/>
+                            <f:selectItem itemLabel="Trem-1 activation (Mouse)" itemValue="trem"/>
+                            <f:selectItem itemLabel="Example gene list (fruitfly)" itemValue="dmeList"/>
+                            <f:selectItem itemLabel="Example gene list (C.elegans)" itemValue="celList"/>
+                            <f:selectItem itemLabel="Example gene list (yeast)" itemValue="sceList"/>
+                            <f:selectItem itemLabel="Multiple gene lists (mouse)" itemValue="multi"/>
+                        </p:selectOneRadio> 
+                        <p:scrollPanel style="width: 560px;" mode="native"> 
+                            <p:panelGrid>  
+                                <f:facet name="header">  
+                                    <p:row>  
+                                        <p:column>Name</p:column>  
+                                        <p:column>Parameter</p:column>  
+                                        <p:column>Description</p:column>  
+                                    </p:row>  
+                                </f:facet>  
+                                <p:row>  
+                                    <p:column style="font-weight: bold; width:110px">
+                                        <p:radioButton id="opt0" for="customRadio" itemIndex="0"/>  
+                                        Gene list 1
+                                    </p:column>
+                                    <p:column  style="width:160px">
+                                        <b>Organism</b>: Human<br/>
+                                        <b>ID Type</b>: Entrez Gene ID
+                                    </p:column>  
+                                    <p:column>
+                                        Endotoxin tolerance gene signature (99 genes)
+                                    </p:column>  
+                                </p:row> 
+                                <p:row>  
+                                    <p:column style="font-weight: bold;">
+                                        <p:radioButton id="opt1" for="customRadio" itemIndex="1"/>   
+                                        Gene list 2
+                                    </p:column>
+                                    <p:column  style="width:160px">
+                                        <b>Organism</b>: Mouse<br/>
+                                        <b>ID Type</b>: Entrez Gene ID
+                                    </p:column>  
+                                    <p:column>
+                                        Trem-1 activation gene signature (96 genes)
+                                    </p:column>  
+                                </p:row>
+                                <p:row>  
+                                    <p:column style="font-weight: bold;">
+                                        <p:radioButton id="opt2" for="customRadio" itemIndex="2"/>   
+                                        Gene list 3
+                                    </p:column>
+                                    <p:column  style="width:160px">
+                                        <b>Organism</b>: Fruit fly<br/>
+                                        <b>ID Type</b>: Uniprot ID
+                                    </p:column>  
+                                    <p:column>
+                                        Example gene list for testing purpose (41 genes)
+                                    </p:column>  
+                                </p:row> 
+                                <p:row>  
+                                    <p:column style="font-weight: bold;">
+                                        <p:radioButton id="opt3" for="customRadio" itemIndex="3"/>   
+                                        Gene list 4
+                                    </p:column>
+                                    <p:column  style="width:160px">
+                                        <b>Organism</b>: C. elegans<br/>
+                                        <b>ID Type</b>: Uniprot ID
+                                    </p:column>  
+                                    <p:column>
+                                        Example gene list for testing purpose (74 genes)
+                                    </p:column>  
+                                </p:row> 
+                                <p:row>  
+                                    <p:column style="font-weight: bold;">
+                                        <p:radioButton id="opt4" for="customRadio" itemIndex="4"/>   
+                                        Gene list 5
+                                    </p:column>
+                                    <p:column  style="width:160px">
+                                        <b>Organism</b>: S. cerevisiae<br/>
+                                        <b>ID Type</b>: Uniprot ID
+                                    </p:column>  
+                                    <p:column>
+                                        Example gene list for testing purpose (47 genes)
+                                    </p:column>  
+                                </p:row> 
+                                <p:row>  
+                                    <p:column style="font-weight: bold;">
+                                        <p:radioButton id="opt5" for="customRadio" itemIndex="5"/>   
+                                        Multiple Lists
+                                    </p:column>
+                                    <p:column  style="width:160px">
+                                        <b>Organism</b>: Mouse<br/>
+                                        <b>ID Type</b>: Symbol
+                                    </p:column>  
+                                    <p:column>
+                                        Three lists of genes for testing purposes
+                                    </p:column>  
+                                </p:row> 
+                            </p:panelGrid>
+                        </p:scrollPanel>
+                        <h:panelGrid columns="2" style="width:560px; padding-left: 160px; padding-top: 10px">
+                            <p:commandButton value="Yes" 
+                                             onclick="PF('testDataDialog').hide();"
+                                             oncomplete="PF('statusDialog').hide();"
+                                             update=":form" 
+                                             actionListener="#{uploadBean.updateGeneListInput()}"/>  
+                            <p:commandButton value="Cancel" onclick="PF('testDataDialog').hide();"/>
+                        </h:panelGrid> 
+                    </h:form>
+                </p:dialog>
+            </p:layoutUnit> 
+            <p:layoutUnit position="south" collapsible="true" gutter="0" style="padding:0px; margin: 0px; border-top: thin orange solid;">
+                <h:form id="southform">
+                    <h:panelGrid columns="2" style="padding-top: 4px; padding-bottom: 2px; width:100%; text-align: center;">
+                        <p:button value="Previous"
+                                  id="testBn" style="width:120px"
+                                  icon="ui-icon-circle-arrow-w"                                           
+                                  outcome="logout"/>
+
+                        <p:button id="visBn"
+                                  disabled="#{not uploadBean.fileUploaded}"
+                                  value="Proceed" style="width:120px"
+                                  onclick="PF('statusDialog').show();"
+                                  icon="ui-icon-circle-arrow-e"
+                                  outcome="listover"
+                                  /> 
+                    </h:panelGrid>
+                </h:form>
+            </p:layoutUnit>
+        </p:layout>
+    </ui:define>
+</ui:composition>
