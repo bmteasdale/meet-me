@@ -24,19 +24,19 @@
         </ui:insert>
     </h:head>
     <h:body>
-        <p:layout style="margin:0px; padding:0px; font-size: 13px" fullPage="true">
-            <p:layoutUnit style="margin:0px; padding:0px" collapsible="true" gutter="0" position="north">
+        <p:layout fullPage="true">
+            <p:layoutUnit collapsible="true" gutter="0" position="north">
                 <ui:insert name="header"> 
                     <ui:include src="/template/_menubar.xhtml" />
                 </ui:insert>
             </p:layoutUnit>
-            <p:layoutUnit style="margin:0px; padding:0px"  collapsible="true" gutter="0" position="center">
-                <div id="container" style="line-height: 21px; font-size: 13px; font-family: Arial, Helvetica, Geneva; margin: 0; padding: 0">
+            <p:layoutUnit collapsible="true" gutter="0" position="center">
+                <div id="container" style="line-height: 21px; font-size: 13px; margin: 0; padding: 0">
                     <ui:insert name="centerpane"> 
                     </ui:insert>
                 </div>
             </p:layoutUnit>
-            <p:layoutUnit style="margin:0px; padding:0px" gutter="0" position="south" collapsible="true">
+            <p:layoutUnit gutter="0" position="south" collapsible="true">
                 <div id="footer" style="clear: both; margin: 0; padding: 0;" class="ui-widget ui-widget-header ui-corner-all">
                     <ui:include src="/template/_footer.xhtml" />
                 </div>

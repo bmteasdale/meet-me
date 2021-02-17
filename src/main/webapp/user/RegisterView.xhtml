@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/_template.xhtml">
+    <ui:define name="centerpane">
+        <p:layout id="layout">
+            <p:layoutUnit position="center" collapsible="true" gutter="0">
+                <!-- Register Form -->
+                <form style="font-family: Raleway; margin: 0 auto; width: 50%; text-align: center;">
+                    <div class="card">
+                        <br/><br/>
+                        <h2>Register with a new account</h2><br/>
+                        <div class="input-group mb-3">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                placeholder="First Name" 
+                                aria-label="FirstName" 
+                                aria-describedby="basic-addon1"
+                                required="true"/>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                placeholder="Last Name" 
+                                aria-label="LastName" 
+                                aria-describedby="basic-addon1"
+                                required="true"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input 
+                                type="text" 
+                                class="form-control"
+                                placeholder="Username" 
+                                aria-label="Username" 
+                                aria-describedby="basic-addon1"
+                                required="true"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                placeholder="Email" 
+                                aria-label="Email" 
+                                aria-describedby="basic-addon1" 
+                                required="true"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input 
+                                type="password" 
+                                class="form-control" 
+                                placeholder="Create Password" 
+                                aria-label="Create Password" 
+                                aria-describedby="basic-addon1"
+                                required="true"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input 
+                                type="password" 
+                                class="form-control" 
+                                placeholder="Confirm Password" 
+                                aria-label="Confirm Password" 
+                                aria-describedby="basic-addon1"
+                                required="true"/>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" type="button">Register</button>
+                        </div>
+                        <br/>
+                        <hr style="margin: 0 auto; width: 75%"/>
+                        <div>
+                            <p>Already have an account?</p>
+                            <h:button value="Login" class="btn btn-primary" outcome="login"></h:button>
+                        </div>
+                    </div>
+                </form>
+                <br/><br/>
+            </p:layoutUnit>
+        </p:layout>
+    </ui:define>
+</ui:composition>

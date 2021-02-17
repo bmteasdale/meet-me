@@ -7,22 +7,52 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/template/_template.xhtml">
     <ui:define name="metaInfo">
-        <f:event type="preRenderView" listener="#{navi.registerPage('Login', '/user/LoginView.xhtml')}"/> 
-        <f:event type="postAddToView" listener="#{userLoginBean.welcomeJustRegistered()}"></f:event>     
+        <!--<f:event type="preRenderView" listener="#{navi.registerPage('Login', '/user/LoginView.xhtml')}"/>--> 
+        <!--<f:event type="postAddToView" listener="#{userLoginBean.welcomeJustRegistered()}"></f:event>-->     
     </ui:define>
     <ui:define name="centerpane">
         <p:layout id="layout">
             <p:layoutUnit position="center" collapsible="true" gutter="0">
-                <div class="card">
-                    <div class="ui-g ui-fluid">
-                        <div class="ui-g-12 ui-md-4">
-                            <div class="ui-inputgroup">
-                                <span class="ui-inputgroup-addon"><i class="pi pi-user"></i></span>
-                                <p:inputText placeholder="Username"/>
-                            </div>
+                <!-- Login Form -->
+                <form style="font-family: Raleway; margin: 0 auto; width: 50%; text-align: center;">
+                    <div class="card">
+                        <br/><br/>
+                        <h2 style="font-weight: bold">Welcome to MeetMe</h2><br/>
+                        <h3>Login</h3><br/>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                placeholder="Username" 
+                                aria-label="Username" 
+                                aria-describedby="basic-addon1" 
+                                required="true"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1"><i class="fa fa-lock"></i></span>
+                            <input 
+                                type="password" 
+                                class="form-control" 
+                                placeholder="Password" 
+                                aria-label="Password" 
+                                aria-describedby="basic-addon1"
+                                required="true"/>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" type="button">Login</button>
+                        </div>
+                        <br/>
+                        <hr style="margin: 0 auto; width: 75%"/>
+                        <br/>
+                        <div>
+                            <p>Don't already have an account?</p>
+                            <h:button value="Create New Account" class="btn btn-primary" outcome="register"></h:button>
                         </div>
                     </div>
-                </div>
+                </form>
+
+                <br/><br/>
             </p:layoutUnit>
         </p:layout>
     </ui:define>
