@@ -129,6 +129,11 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
+            <from-outcome>dashboard</from-outcome>
+            <to-view-id>/dashboard/DashboardView.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>resetrequest</from-outcome>
             <to-view-id>/user/ResetRequestView.xhtml</to-view-id>
             <redirect/>

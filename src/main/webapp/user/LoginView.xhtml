@@ -13,6 +13,23 @@
     <ui:define name="centerpane">
         <p:layout id="layout">
             <p:layoutUnit position="center" collapsible="true" gutter="0">
+                
+                <!-- Navigation Bar -->
+                <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-family: Raleway">
+                    <div class="container-fluid">
+                      <a class="navbar-brand" href="/meet-me">MeetMe</a>
+                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+                        <div class="navbar-nav" style="font-family: Raleway; font-weight: bold;">              
+                          <a class="nav-link" href="/meet-me/user/LoginView.xhtml">Login</a>
+                          <a class="nav-link" href="/meet-me/user/RegisterView.xhtml">Register</a>
+                        </div>
+                      </div>
+                    </div>
+                </nav>
+                
                 <!-- Login Form -->
                 <form style="font-family: Raleway; margin: 0 auto; width: 50%; text-align: center;">
                     <div class="card">
@@ -40,7 +57,7 @@
                                 required="true"/>
                         </div>
                         <div class="d-grid gap-2">
-                            <button class="btn btn-primary" type="button">Login</button>
+                            <h:button value="Login" class="btn btn-primary" outcome="dashboard"></h:button>
                         </div>
                         <br/>
                         <hr style="margin: 0 auto; width: 75%"/>
