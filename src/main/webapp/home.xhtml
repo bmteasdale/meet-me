@@ -15,7 +15,7 @@
         <div class="container" style="font-family: Raleway;">
             
             <!-- About -->
-            <div class="row">
+            <div class="row mb-5">
                 <!-- 
                 In case you are not familiar with Bootstrap: 
                 col-lg-12 - full page width
@@ -37,48 +37,117 @@
                 </div>
                 <div class="col-lg-2"></div>
             </div>
+            <br/>
+                <hr style="margin: 0 auto; width: 75%"/>
+            <br/>
             
             <!-- Features -->
-            <div class="row mt-5 text-center">
-                <div class="col-lg-12 ">
+            <div class="row mt-3 text-center">
+                <div class="col-lg-12">
                     <br/>
-                    <h2>Features</h2><br/>
+                    <h2 style="font-weight: bold;">Features</h2><br/>
                 </div>
             </div>
             <div class="row text-center">
-                <div class="col-lg-4">
-                    <p style="font-weight: bold;">Efficient</p>
-                    <p>Able to find all available time blocks within a matter of seconds... </p>
+                <div class="col-lg-4 d-flex justify-content-center">
+                    <div class="card border-0" style="width: 22rem;">
+                        <div class="card-body">
+                            <img src="#{facesContext.externalContext.requestContextPath}/resources/images/calendar_timeblock_icon.PNG" 
+                            style="width: 50px;" class="card-img-top"/>
+                            <h6 class="card-title text-center" style="font-weight: bold;">Efficient</h6>
+                            <h6 class="card-text">Instantly find times that work for both organizers and attendees.</h6>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-4">
-                    <p style="font-weight: bold;">Email Reminders</p>
-                    <p>All attendees are sent email reminders prior to a meeting...</p>
+                <div class="col-lg-4 d-flex justify-content-center">
+                    <div class="card border-0" style="width: 22rem;">
+                        <div class="card-body">
+                            <img src="#{facesContext.externalContext.requestContextPath}/resources/images/email_reminder_icon.PNG" 
+                            style="width: 60px;" class="card-img-top"/>
+                            <h6 class="card-title text-center" style="font-weight: bold;">Email Reminders</h6>
+                            <h6 class="card-text">All attendees are sent email reminders prior to a meeting.</h6>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-4">
-                    <p style="font-weight: bold;">Expandable</p>
-                    <p>Works great for companies...</p>
+                <div class="col-lg-4 d-flex justify-content-center">
+                    <div class="card border-0" style="width: 22rem;">
+                        <div class="card-body">
+                            <img src="#{facesContext.externalContext.requestContextPath}/resources/images/people_icon.PNG" 
+                            style="width: 50px;" class="card-img-top"/>
+                            <h6 class="card-title text-center" style="font-weight: bold;">Expandable</h6>
+                            <h6 class="card-text">Works great for individuals and teams.</h6>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row text-center">
-                <div class="col-lg-4">
-                    <p style="font-weight: bold;">Flexible</p>
-                    <p>Users are able to schedule meetings with however many people they want...</p>
+            <div class="row text-center mb-4">
+                <div class="col-lg-4 d-flex justify-content-center">
+                    <div class="card border-0" style="width: 22rem;">
+                        <div class="card-body">
+                            <img src="#{facesContext.externalContext.requestContextPath}/resources/images/group_icon.PNG" 
+                            style="width: 55px;" class="card-img-top"/>
+                            <h6 class="card-title text-center" style="font-weight: bold;">Flexible</h6>
+                            <h6 class="card-text">Users can add unlimited attendees to a meeting.</h6>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-4">
-                    <p style="font-weight: bold;">Flexible</p>
-                    <p>Users have the option to make their meetings public or private</p>
+                <div class="col-lg-4 d-flex justify-content-center">
+                    <div class="card border-0" style="width: 22rem;">
+                        <div class="card-body">
+                            <img src="#{facesContext.externalContext.requestContextPath}/resources/images/lock_icon.png" 
+                            style="width: 43px;" class="card-img-top"/>
+                            <h6 class="card-title text-center" style="font-weight: bold;">Privacy</h6>
+                            <h6 class="card-text">Users have the option to make their meetings public or private.</h6>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-4">
-                    <p style="font-weight: bold;">Timezones</p>
-                    <p>MeetMe is able to seamlessly handle changes in timezones</p>
+                <div class="col-lg-4 d-flex justify-content-center">
+                    <div class="card border-0" style="width: 22rem;">
+                        <div class="card-body">
+                            <img src="#{facesContext.externalContext.requestContextPath}/resources/images/timezone_icon.png" 
+                            style="width: 45px;" class="card-img-top"/>
+                            <h6 class="card-title text-center" style="font-weight: bold;">Timezone Management</h6>
+                            <h6 class="card-text">MeetMe is able to seamlessly handle changes in timezones.</h6>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <br/>
+                <hr style="margin: 0 auto; width: 75%"/>
+            <br/>
             
             <!-- How it works -->
-            <div class="row mt-5 text-center">
+            <div class="row mt-3 text-center">
                 <div class="col-lg-12 ">
                     <br/>
                     <h2 style="font-weight: bold;">How It Works</h2><br/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 d-flex justify-content-center">
+                    <div class="card" style="width: 22rem;">
+                        <div class="card-body">
+                            <h5 class="card-title" style="font-weight: bold;">1. Enter Meeting Details</h5>
+                            <h6 class="card-text">Enter the names of the participants as well as the date in which the meeting will be set.</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 d-flex justify-content-center">
+                    
+                    <div class="card" style="width: 22rem;">
+                        <div class="card-body">
+                            <h5 class="card-title" style="font-weight: bold;">2. Select Meeting Time</h5>
+                            <h6 class="card-text">Given the date, MeetMe will prompt you with a list of available time blocks for that day.</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 d-flex justify-content-center">
+                    <div class="card" style="width: 22rem;">
+                        <div class="card-body">
+                            <h5 class="card-title" style="font-weight: bold;">3. Invite Attendees</h5>
+                            <h6 class="card-text">Once the meeting time has been selected, all attendees will be sent an email invitation. Attendees will also receive an email reminder prior to the meeting.</h6>
+                        </div>
+                    </div>
                 </div>
             </div>
             
