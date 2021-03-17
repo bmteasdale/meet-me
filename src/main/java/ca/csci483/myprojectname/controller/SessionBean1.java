@@ -23,7 +23,7 @@ public class SessionBean1 implements Serializable {
     private User currentUser = null;
     
     private String myName = "Othman";
-
+    
     public User getCurrentUser() {
         return currentUser;
     }
