@@ -41,8 +41,38 @@ and open the template in the editor.
                         </div>
                         <div class="tab-content" id="v-pills-tabContent">
                             <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-                                <br/>
-                                <p>Home</p>
+                                <div class="container">
+                                    <div class="card">
+                                        
+                                        <p:growl id="messages" showDetail="true"/>
+                                        
+                                        <p:schedule id="schedule" value="#{homeSchedule.eventModel}" widgetVar="myschedule">
+                                            <p:ajax event="dateSelect" listener="#{homeSchedule.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();"/>
+                                            <p:ajax event="eventSelect" listener="#{homeSchedule.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();"/>
+                                        </p:schedule>
+                                        
+                                        <p:dialog widgetVar="eventDialog" header="Create New Meeting" showEffect="fade" hideEffect="fade">
+                                            <h:panelGrid id="eventDetails" columns="2" cellpadding="7">
+                                                <p:outputLabel for="title" value="Title" styleClass="p-text-bold"/>
+                                                <p:inputText id="title" value="#{homeSchedule.event.title}" required="true"/>
+                                                <!--
+                                                <p:outputLabel for="from" value="From" styleClass="p-text-bold"/>
+                                                <p:datePicker id="from" value="#{scheduleJava8View.event.startDate}" pattern="dd/MM/yyyy" showTime="true" appendTo="@(body)"/>
+
+                                                <p:outputLabel for="to" value="To" styleClass="p-text-bold"/>
+                                                <p:datePicker id="to" value="#{scheduleJava8View.event.endDate}" pattern="dd/MM/yyyy" showTime="true" appendTo="@(body)"/>
+`                                               -->
+                                            </h:panelGrid>
+
+                                            <div class="p-d-flex p-jc-between p-mt-3">
+                                                <p:commandButton type="reset" value="Reset" styleClass="p-text-bold ui-button-outlined"/>
+                                                <p:commandButton id="addButton" value="Save" action="#{homeSchedule.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
+                                            </div>
+                                        </p:dialog>
+                                        
+                                    </div>
+                                </div>
+                                
                             </div>
                             <div class="tab-pane fade" id="v-pills-upcoming" role="tabpanel" aria-labelledby="v-pills-upcoming-tab">
                                 <br/>
