@@ -7,14 +7,13 @@ package ca.csci483.myprojectname.controller;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import org.bson.types.ObjectId;
 
 /**
  *
  * @author bmteasdale
  */
 public class Meeting {
-    private ObjectId meetingID;
+    private int meetingID;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalTime startTime;
@@ -25,11 +24,11 @@ public class Meeting {
     private String chairperson;
     private ArrayList<String> attendees;
 
-    public ObjectId getMeetingID() {
+    public int getMeetingID() {
         return meetingID;
     }
 
-    public void setMeetingID(ObjectId meetingID) {
+    public void setMeetingID(int meetingID) {
         this.meetingID = meetingID;
     }
 

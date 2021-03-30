@@ -4,7 +4,6 @@
  */
 package ca.csci483.myprojectname.controller;
 
-import ca.csci483.myprojectname.utils.DataUtils;
 import ca.csci483.myprojectname.model.User;
 import java.io.Serializable;
 import javax.inject.Named;
@@ -19,7 +18,6 @@ import javax.enterprise.context.SessionScoped;
 @Named("sessionBean1")
 public class SessionBean1 implements Serializable {
 
-    private final ApplicationBean1 ab = (ApplicationBean1) DataUtils.findBean("applicationBean1");
     private User currentUser = null;
     
     private String myName = "Othman";

@@ -14,35 +14,76 @@ import java.io.Serializable;
  */
 public class User implements Serializable{
     
-    private String name; // name is randomly assigned by the system
-    private String homeDir, relativeDir;
+    private String username; 
+    private String password;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String bio;
 
-    public String getRelativeDir() {
-        return relativeDir;
+    public User(String username, String password, String firstName, String lastName, String email) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.bio = "";
     }
 
-    public void setRelativeDir(String relativeDir) {
-        this.relativeDir = relativeDir;
+    public User(String username, String password, String firstName, String lastName, String email, String bio) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.bio = bio; 
     }
 
-    public User() {
+    public String getPassword() {
+        return password;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setHomeDir(String dir) {
-        this.homeDir = dir;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getHomeDir() {
-        return homeDir;
+    public String getLastName() {
+        return lastName;
     }
-    
-    
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public void setUsername(String name) {
+        this.username = name;
+    }
+
+    public String getUsername () {
+        return username;
+    }
 }

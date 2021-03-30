@@ -9,43 +9,73 @@ package ca.csci483.myprojectname.model;
  *
  * @author bmteasdale
  */
-import com.mongodb.*;
-import io.github.cdimascio.dotenv.Dotenv;
-import java.net.UnknownHostException;
+//import io.github.cdimascio.dotenv.Dotenv;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import javax.faces.bean.ManagedBean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException;
 
-@ManagedBean
-@SessionScoped
+
+@ManagedBean(name = "dbConnection")
 public class DBConnection {
-    private String dbURI;
-    private String dbName;
-    private MongoClient client;
-    private DB database;
-    private DBCollection userCollection;
-    private DBCollection meetingCollection;
     
-    public DBConnection(){
-        Dotenv dotenv = Dotenv.configure()
-        .directory("../utils")
-        .ignoreIfMalformed()
-        .ignoreIfMissing()
-        .load();
-       
-        this.dbURI = dotenv.get("DB_URI");
-        this.dbName = dotenv.get("DB_NAME");
-        try {
-            MongoClientURI uri = new MongoClientURI(this.dbURI);
-            MongoClient mongoClient = new MongoClient(uri);
-            this.database = mongoClient.getDB(this.dbName);
-            this.userCollection = database.getCollection("user");
-            this.meetingCollection = database.getCollection("meeting");
-            System.out.println("Mongo successfully connected!");
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+    private final String host;
+    private final int port;
+    private final String databaseName;
+    private final String username;
+    private final String password;
+    private MysqlDataSource dataSource;
+    
+    public DBConnection () {
+        this.host = "127.0.0.1";
+        this.port = 3306;
+        this.databaseName = "meetme";
+        this.username = "admin";
+        this.password = "admin";
+        connectDataSource();
+    }
+    
+    public void connectDataSource(){
+        dataSource = new MysqlDataSource();
+               
+        String url = String.format(
+                "jdbc:mysql://%s:%d/%s?allowPublicKeyRetrieval=true&useSSL=false",
+                this.host,
+                this.port,
+                this.databaseName);
+        dataSource.setURL(url);
+
+        dataSource.setUser(this.username);
+        dataSource.setPassword(this.password);        
+    }
+    
+    private void close(ResultSet rs, Statement st, Connection cn){
+        if (rs != null){
+            try {
+                rs.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-    };
-    
+
+        if (st != null){
+            try {
+                st.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if (cn != null){
+            try {
+                cn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }
