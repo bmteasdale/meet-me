@@ -7,19 +7,20 @@ package ca.csci483.myprojectname.controller;
 
 import ca.csci483.myprojectname.model.DBConnection;
 import ca.csci483.myprojectname.model.User;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 
 /**
  *
  * @author bmteasdale
  */
-@ManagedBean(name = "userBean")
 @SessionScoped
-public class UserBean {
+@Named("userBean")
+public class UserBean implements Serializable {
     private String username;
     private String password;
     private String confirmPassword;
@@ -27,13 +28,34 @@ public class UserBean {
     private String lastName;
     private String email;
     private String bio;  
+    private boolean registrationFail;
     
     public UserBean(){
     }
     
+    public void handleRegistration(String username, String password, String confirmPassword, String fname, String lname, String email){
+        
+        /* Not working yet: inputText values are not updating in RegisterView.xhtml */
+
+        //boolean validRegistration = this.password.equals(this.confirmPassword);
+        boolean validRegistration = password.equals(confirmPassword);
+        
+        if(validRegistration) {
+            DBConnection dbc = new DBConnection();
+            this.registrationFail = !(dbc.registerUser(username, password, fname, lname, email));
+        }
+    }
+    
     public void showRegistrationMessage(){
         FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage("Success", "You have successfully registered!"));
+        
+        if (this.registrationFail == false){
+            context.addMessage(null, new FacesMessage("Success", "You have successfully registered!"));
+        }
+        else {
+            context.addMessage(null, new FacesMessage("Error", "Please try again!"));
+        }
+        
     }
     
     public String getUsername() {
@@ -91,11 +113,14 @@ public class UserBean {
     public void setBio(String bio) {
         this.bio = bio;
     }
-    
-    public void handleRegistration() throws UnknownHostException {
-        boolean validRegistration = this.password.equals(this.confirmPassword);
-        if(validRegistration) {
-            
-        }
+
+    public boolean isRegistrationFail() {
+        return registrationFail;
     }
+
+    public void setRegistrationFail(boolean registrationFail) {
+        this.registrationFail = registrationFail;
+    }
+    
+    
 }

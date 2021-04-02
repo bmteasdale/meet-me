@@ -42,11 +42,13 @@ and open the template in the editor.
                         <h2>Register with a new account</h2><br/>
                         <div class="input-group mb-3">
                             <h:inputText 
+                                id="fname"
                                 value="#{userBean.firstName}"
                                 class="form-control" 
                                 a:placeholder="First Name" 
                                 required="true"/>
                             <h:inputText
+                                id="lname"
                                 value="#{userBean.lastName}"
                                 class="form-control" 
                                 a:placeholder="Last Name" 
@@ -54,6 +56,7 @@ and open the template in the editor.
                         </div>
                         <div class="input-group mb-3" style="font-family: Raleway;">
                             <h:inputText
+                                id="username"
                                 value="#{userBean.username}"
                                 class="form-control"
                                 a:placeholder="Username" 
@@ -61,6 +64,7 @@ and open the template in the editor.
                         </div>
                         <div class="input-group mb-3" style="font-family: Raleway;">
                             <h:inputText
+                                id="email"
                                 value="#{userBean.email}"
                                 class="form-control" 
                                 a:placeholder="Email"                                 
@@ -68,6 +72,7 @@ and open the template in the editor.
                         </div>
                         <div class="input-group mb-3" style="font-family: Raleway;">
                             <h:inputSecret
+                                id="password"
                                 value="#{userBean.password}"
                                 class="form-control" 
                                 a:placeholder="Create Password" 
@@ -75,18 +80,24 @@ and open the template in the editor.
                         </div>
                         <div class="input-group mb-3" style="font-family: Raleway;">
                             <h:inputSecret 
+                                id="confirmPassword"
                                 value="#{userBean.confirmPassword}"
                                 class="form-control" 
                                 a:placeholder="Confirm Password" 
                                 required="true"/>
                         </div>
                         <div class="d-grid gap-2" style="font-family: Raleway;">
+                            
+                            <!-- input values are not updating -->
                             <h:commandButton 
                                 class="btn btn-primary" 
-                                value="Register" 
+                                value="Register"
                                 actionListener="#{userBean.showRegistrationMessage()}"
-                                action="#{userBean.handleRegistration()}"
-                                />
+                                onclick="#{userBean.handleRegistration(username, password, confirmPassword, fname, lname, email)}"
+                                >
+                                <f:ajax execute="@form"/>
+                            </h:commandButton>
+                            
                         </div>
                         <br/>
                         <hr style="margin: 0 auto; width: 75%"/>

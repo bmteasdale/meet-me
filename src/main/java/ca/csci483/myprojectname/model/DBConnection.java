@@ -10,7 +10,7 @@ package ca.csci483.myprojectname.model;
  * @author bmteasdale
  */
 //import io.github.cdimascio.dotenv.Dotenv;
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import com.mysql.cj.jdbc.MysqlDataSource;
 import javax.faces.bean.ManagedBean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +20,7 @@ import java.sql.Statement;
 import java.sql.SQLException;
 
 
-@ManagedBean(name = "dbConnection")
+//@ManagedBean(name = "dbConnection")
 public class DBConnection {
     
     private final String host;
@@ -77,5 +77,37 @@ public class DBConnection {
                 Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public boolean registerUser(String username, String password, String fname, String lname, String email){
+        
+        Connection dbConnection = null;
+        Statement dbStatement = null;
+        
+        try {
+            dbConnection = dataSource.getConnection();
+            dbStatement = dbConnection.createStatement();
+            System.out.println("Connection established and statement issued");
+            String query = String.format(
+                    "INSERT INTO Users "
+                    + "(username, password, first_name, last_name, email) "
+                    + "VALUES ('%s', '%s', '%s', '%s', '%s'); ",
+                    username,
+                    password,
+                    fname,
+                    lname,
+                    email
+            );
+            
+            System.out.println("Query used: " + query);
+            dbStatement.executeUpdate(query);
+            
+        } catch(SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            this.close(null, dbStatement, dbConnection);
+            return false;
+        }
+        this.close(null, dbStatement, dbConnection);
+        return true;
     }
 }
