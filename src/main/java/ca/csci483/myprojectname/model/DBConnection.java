@@ -9,8 +9,9 @@ package ca.csci483.myprojectname.model;
  *
  * @author bmteasdale
  */
-//import io.github.cdimascio.dotenv.Dotenv;
 import com.mysql.cj.jdbc.MysqlDataSource;
+import ca.csci483.myprojectname.model.User;
+import static com.mysql.cj.MysqlType.JSON;
 import javax.faces.bean.ManagedBean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 //@ManagedBean(name = "dbConnection")
@@ -109,5 +112,35 @@ public class DBConnection {
         }
         this.close(null, dbStatement, dbConnection);
         return true;
+    }
+    
+    public User findUser (String username, String password) {
+        Connection dbConnection = null;
+        Statement dbStatement = null;
+        User user = null;
+        
+        try {
+            dbConnection = dataSource.getConnection();
+            dbStatement = dbConnection.createStatement();
+            String query = String.format("SELECT * FROM Users WHERE email = %s and password = %s", 
+                    username, password);
+            System.out.println("Query used: " + query);
+
+            ResultSet result = dbStatement.executeQuery(query);
+            if (result.next()) {
+                user = new User();
+                user.setUsername(username);
+                user.setFirstName(result.getString("username"));
+                user.setLastName(result.getString("first_name"));
+                user.setEmail(result.getString("email"));
+            }
+            
+        } catch(SQLException e) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, e);
+            this.close(null, dbStatement, dbConnection);
+            return user;
+        }
+        this.close(null, dbStatement, dbConnection);
+        return user;
     }
 }

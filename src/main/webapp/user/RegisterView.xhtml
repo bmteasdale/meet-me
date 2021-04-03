@@ -93,7 +93,7 @@ and open the template in the editor.
                                 class="btn btn-primary" 
                                 value="Register"
                                 actionListener="#{userBean.showRegistrationMessage()}"
-                                onclick="#{userBean.handleRegistration(username, password, confirmPassword, fname, lname, email)}"
+                                onclick="#{userBean.handleRegistration(userBean.username, userBean.password, userBean.confirmPassword, userBean.firstName, userBean.lastName, userBean.email)}"
                                 >
                                 <f:ajax execute="@form"/>
                             </h:commandButton>

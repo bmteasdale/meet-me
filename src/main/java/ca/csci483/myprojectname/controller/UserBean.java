@@ -8,7 +8,6 @@ package ca.csci483.myprojectname.controller;
 import ca.csci483.myprojectname.model.DBConnection;
 import ca.csci483.myprojectname.model.User;
 import java.io.Serializable;
-import java.net.UnknownHostException;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -29,6 +28,7 @@ public class UserBean implements Serializable {
     private String email;
     private String bio;  
     private boolean registrationFail;
+    private boolean successfulLogin;
     
     public UserBean(){
     }
@@ -46,6 +46,23 @@ public class UserBean implements Serializable {
         }
     }
     
+    public String loginValidation(String username, String password) {
+        this.successfulLogin = false;
+        DBConnection dbc = new DBConnection();
+        User currentUser = dbc.findUser(username, password);
+        if (currentUser != null) {
+            this.successfulLogin = true;
+            this.password = null;
+            this.firstName = currentUser.getFirstName();
+            this.lastName = currentUser.getLastName();
+            this.username = currentUser.getUsername();
+            this.email = currentUser.getEmail();
+            return "dashboard";
+        }
+        this.password = null;
+        return "";
+    }
+    
     public void showRegistrationMessage(){
         FacesContext context = FacesContext.getCurrentInstance();
         
@@ -53,7 +70,19 @@ public class UserBean implements Serializable {
             context.addMessage(null, new FacesMessage("Success", "You have successfully registered!"));
         }
         else {
-            context.addMessage(null, new FacesMessage("Error", "Please try again!"));
+            context.addMessage(null, new FacesMessage("Error", "Sorry, Please try again!"));
+        }
+        
+    }
+    
+    public void showLoginMessage(){
+        FacesContext context = FacesContext.getCurrentInstance();
+        
+        if (this.successfulLogin == true){
+            context.addMessage(null, new FacesMessage("Success", "Successful Login!"));
+        }
+        else {
+            context.addMessage(null, new FacesMessage("Error", "Sorry, we could't find an account with those credentials!"));
         }
         
     }
@@ -120,6 +149,14 @@ public class UserBean implements Serializable {
 
     public void setRegistrationFail(boolean registrationFail) {
         this.registrationFail = registrationFail;
+    }
+
+    public boolean isSuccessfulLogin() {
+        return successfulLogin;
+    }
+
+    public void setSuccessfulLogin(boolean successfulLogin) {
+        this.successfulLogin = successfulLogin;
     }
     
     
