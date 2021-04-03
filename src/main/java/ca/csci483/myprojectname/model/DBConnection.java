@@ -79,7 +79,7 @@ public class DBConnection {
         }
     }
     
-    public boolean registerUser(String username, String password, String fname, String lname, String email){
+    public boolean registerUser(String username, String password, String firstName, String lastName, String email){
         
         Connection dbConnection = null;
         Statement dbStatement = null;
@@ -94,8 +94,8 @@ public class DBConnection {
                     + "VALUES ('%s', '%s', '%s', '%s', '%s'); ",
                     username,
                     password,
-                    fname,
-                    lname,
+                    firstName,
+                    lastName,
                     email
             );
             

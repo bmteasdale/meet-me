@@ -9,6 +9,7 @@ import ca.csci483.myprojectname.model.DBConnection;
 import ca.csci483.myprojectname.model.User;
 import java.io.Serializable;
 import java.net.UnknownHostException;
+import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -33,17 +34,31 @@ public class UserBean implements Serializable {
     public UserBean(){
     }
     
-    public void handleRegistration(String username, String password, String confirmPassword, String fname, String lname, String email){
+    public String handleRegistration(){
         
-        /* Not working yet: inputText values are not updating in RegisterView.xhtml */
-
-        //boolean validRegistration = this.password.equals(this.confirmPassword);
-        boolean validRegistration = password.equals(confirmPassword);
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
         
-        if(validRegistration) {
-            DBConnection dbc = new DBConnection();
-            this.registrationFail = !(dbc.registerUser(username, password, fname, lname, email));
+        if(params != null && !params.isEmpty()){
+            
+            this.firstName = params.get("firstName");
+            this.lastName = params.get("lastName");
+            this.username =  params.get("username"); 
+            this.email = params.get("email");
+            this.password = params.get("password");
+            this.confirmPassword = params.get("confirmPassword");
+            
+            boolean validRegistration = password.equals(confirmPassword);
+            
+            if(validRegistration) {
+                 DBConnection dbc = new DBConnection();
+                 this.registrationFail = !(dbc.registerUser(username, password, firstName, lastName, email));
+            }
+            
         }
+        
+        return "login";
+        
     }
     
     public void showRegistrationMessage(){
@@ -55,7 +70,6 @@ public class UserBean implements Serializable {
         else {
             context.addMessage(null, new FacesMessage("Error", "Please try again!"));
         }
-        
     }
     
     public String getUsername() {

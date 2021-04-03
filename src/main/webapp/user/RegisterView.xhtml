@@ -42,13 +42,13 @@ and open the template in the editor.
                         <h2>Register with a new account</h2><br/>
                         <div class="input-group mb-3">
                             <h:inputText 
-                                id="fname"
-                                value="#{userBean.firstName}"
+                                id="firstName"
+                                binding="#{firstName}"
                                 class="form-control" 
                                 a:placeholder="First Name" 
                                 required="true"/>
                             <h:inputText
-                                id="lname"
+                                id="lastName"
                                 value="#{userBean.lastName}"
                                 class="form-control" 
                                 a:placeholder="Last Name" 
@@ -93,9 +93,14 @@ and open the template in the editor.
                                 class="btn btn-primary" 
                                 value="Register"
                                 actionListener="#{userBean.showRegistrationMessage()}"
-                                onclick="#{userBean.handleRegistration(username, password, confirmPassword, fname, lname, email)}"
+                                onclick="#{userBean.handleRegistration()}"
                                 >
-                                <f:ajax execute="@form"/>
+                                <f:param name = "firstName" value = "firstName" />
+                                <f:param name = "lastName" value = "lastName" />
+                                <f:param name = "username" value = "username" />
+                                <f:param name = "email" value = "email" />
+                                <f:param name = "password" value = "password" />
+                                <f:param name = "confirmPassword" value = "confirmPassword" />
                             </h:commandButton>
                             
                         </div>
