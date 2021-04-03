@@ -33,17 +33,17 @@ and open the template in the editor.
                 </nav>
                 
                 <!-- Register Form -->
-                <form style="font-family: Raleway; margin: 0 auto; width: 50%; text-align: center;">
+                <h:form style="font-family: Raleway; margin: 0 auto; width: 50%; text-align: center;">
                     <p:growl id="registerGrowl" showDetail="true" sticky="false"/>
                     <f:passThroughAttribute name="autocomplete" value="off"/>
                     <img src="../resources/images/add_user.png" alt="addUser" style="height: 200px;"/>
-                    <div class="card">
+                    
                         <br/><br/>
                         <h2>Register with a new account</h2><br/>
                         <div class="input-group mb-3">
                             <h:inputText 
                                 id="firstName"
-                                binding="#{firstName}"
+                                value="#{userBean.firstName}"
                                 class="form-control" 
                                 a:placeholder="First Name" 
                                 required="true"/>
@@ -86,32 +86,20 @@ and open the template in the editor.
                                 a:placeholder="Confirm Password" 
                                 required="true"/>
                         </div>
-                        <div class="d-grid gap-2" style="font-family: Raleway;">
-                            
-                            <!-- input values are not updating -->
-                            <h:commandButton 
-                                class="btn btn-primary" 
-                                value="Register"
-                                actionListener="#{userBean.showRegistrationMessage()}"
-                                onclick="#{userBean.handleRegistration()}"
-                                >
-                                <f:param name = "firstName" value = "firstName" />
-                                <f:param name = "lastName" value = "lastName" />
-                                <f:param name = "username" value = "username" />
-                                <f:param name = "email" value = "email" />
-                                <f:param name = "password" value = "password" />
-                                <f:param name = "confirmPassword" value = "confirmPassword" />
-                            </h:commandButton>
-                            
-                        </div>
-                        <br/>
+                        <h:commandButton 
+                            class="btn btn-primary" 
+                            value="Register"
+                            actionListener="#{userBean.showRegistrationMessage()}"
+                            action="#{userBean.handleRegistration(userBean.firstName, userBean.lastName, userBean.username, userBean.email, userBean.password, userBean.confirmPassword)}"
+                            /> 
+                        <br/><br/>
                         <hr style="margin: 0 auto; width: 75%"/>
                         <div>
                             <p>Already have an account?</p>
                             <h:button value="Login" class="btn btn-primary" outcome="login"></h:button>
                         </div>
-                    </div>
-                </form>
+                    
+                </h:form>
                 <br/><br/>
             </p:layoutUnit>
         </p:layout>

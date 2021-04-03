@@ -124,6 +124,11 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
+            <from-outcome>error</from-outcome>
+            <to-view-id>/errorView.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
             <from-action>#{userBean.loginValidation(userBean.username, userBean.password)}</from-action>
             <from-outcome>success</from-outcome>
             <to-view-id>/dashboardview.xhtml</to-view-id>
@@ -132,7 +137,19 @@
         <navigation-case>
             <from-action>#{userBean.loginValidation(userBean.username, userBean.password)}</from-action>
             <from-outcome>fail</from-outcome>
+            <to-view-id>/errorView.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{userBean.handleRegistration(userBean.firstName, userBean.lastName, userBean.username, userBean.email, userBean.password, userBean.confirmPassword)}</from-action>
+            <from-outcome>registrationSuccess</from-outcome>
             <to-view-id>/user/LoginView.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{userBean.handleRegistration(userBean.firstName, userBean.lastName, userBean.username, userBean.email, userBean.password, userBean.confirmPassword)}</from-action>
+            <from-outcome>registrationFail</from-outcome>
+            <to-view-id>/errorView.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>

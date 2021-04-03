@@ -35,31 +35,25 @@ public class UserBean implements Serializable {
     public UserBean(){
     }
     
-    public String handleRegistration(){
+    public String handleRegistration(String firstName, String lastName, String username, String email, String password, String confirmPassword){
         
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
-        
-        if(params != null && !params.isEmpty()){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username =  username;
+        this.email = email;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+        boolean validRegistration = password.equals(confirmPassword);
             
-            this.firstName = params.get("firstName");
-            this.lastName = params.get("lastName");
-            this.username =  params.get("username"); 
-            this.email = params.get("email");
-            this.password = params.get("password");
-            this.confirmPassword = params.get("confirmPassword");
-            
-            boolean validRegistration = password.equals(confirmPassword);
-            
-            if(validRegistration) {
-                 DBConnection dbc = new DBConnection();
-                 this.registrationFail = !(dbc.registerUser(username, password, firstName, lastName, email));
-            }
-            
+        if(validRegistration) {
+            DBConnection dbc = new DBConnection();
+            this.registrationFail = !(dbc.registerUser(username, password, firstName, lastName, email));
         }
-        
-        return "login";
-        
+        else {
+            return "registrationFail";
+        }
+            
+        return "registrationSuccess";
     }
     
     public void showRegistrationMessage(){
