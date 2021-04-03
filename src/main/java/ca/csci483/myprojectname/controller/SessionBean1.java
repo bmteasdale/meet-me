@@ -20,22 +20,12 @@ public class SessionBean1 implements Serializable {
 
     private User currentUser = null;
     
-    private String myName = "Othman";
-    
     public User getCurrentUser() {
         return currentUser;
     }
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
-    }
-
-    public String getMyName() {
-        return myName;
-    }
-
-    public void setMyName(String myName) {
-        this.myName = myName;
     }
 
     /**

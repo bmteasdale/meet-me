@@ -39,6 +39,9 @@ public class User implements Serializable{
         this.bio = bio; 
     }
 
+    User() {
+    }
+
     public String getPassword() {
         return password;
     }

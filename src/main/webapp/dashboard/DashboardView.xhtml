@@ -34,10 +34,10 @@ and open the template in the editor.
                 <div class="container" style="margin-top: 50px; margin-left: 0;">
                     <div class="d-flex align-items-start" style="font-family: Raleway">
                         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                          <button style="align-items: left;" class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true"><i class="fa fa-home"></i> Home</button>
-                          <button style="align-items: left;" class="nav-link" id="v-pills-upcoming-tab" data-bs-toggle="pill" data-bs-target="#v-pills-upcoming" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="fa fa-calendar"></i> Upcoming</button>
-                          <button style="align-items: left;" class="nav-link" id="v-pills-notifications-tab" data-bs-toggle="pill" data-bs-target="#v-pills-notifications" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false"><i class="fa fa-bell"></i> Notifications</button>
-                          <button style="align-items: left;" class="nav-link" id="v-pills-account-tab" data-bs-toggle="pill" data-bs-target="#v-pills-account" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false"><i class="fa fa-cogs"></i> Account Settings</button>
+                          <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true"><i class="fa fa-home"></i> Home</button>
+                          <button class="nav-link" id="v-pills-upcoming-tab" data-bs-toggle="pill" data-bs-target="#v-pills-upcoming" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="fa fa-calendar"></i> Upcoming</button>
+                          <button class="nav-link" id="v-pills-notifications-tab" data-bs-toggle="pill" data-bs-target="#v-pills-notifications" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false"><i class="fa fa-bell"></i> Notifications</button>
+                          <button class="nav-link" id="v-pills-account-tab" data-bs-toggle="pill" data-bs-target="#v-pills-account" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false"><i class="fa fa-cogs"></i> Account Settings</button>
                         </div>
                         <div class="tab-content" id="v-pills-tabContent">
                             <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
@@ -76,11 +76,35 @@ and open the template in the editor.
                             </div>
                             <div class="tab-pane fade" id="v-pills-upcoming" role="tabpanel" aria-labelledby="v-pills-upcoming-tab">
                                 <br/>
-                                <p>Upcoming</p>
+                                <p:dataTable var="meeting" value="#{dtBasicView.products}" reflow="true" rows="5" paginator="true" style="margin-left: 20px;">
+                                    <p:column headerText="Meeting Title">
+                                        <h:outputText value="#{meeting.title}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Meeting Description">
+                                        <h:outputText value="#{meeting.description}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Start Date">
+                                        <h:outputText value="#{meeting.startDate}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Start Time">
+                                        <h:outputText value="$#{meeting.startTime}"/>
+                                    </p:column>
+                                </p:dataTable>
                             </div>
                             <div class="tab-pane fade" id="v-pills-notifications" role="tabpanel" aria-labelledby="v-pills-notifications-tab">
                                 <br/>
-                                <p>Notifications</p>
+                                <p:dataTable var="notification" value="#{dtBasicView.products}" reflow="true" rows="5" paginator="true" style="margin-left: 20px;">
+                                    <p:column headerText="Status">
+                                        <h:outputText value="#{notification.status}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Subject">
+                                        <h:outputText value="#{notification.subject}"/>
+                                    </p:column>
+                                </p:dataTable>
                             </div>
                             <div class="tab-pane fade" id="v-pills-account" role="tabpanel" aria-labelledby="v-pills-account-tab">
                                 <div class="container">
