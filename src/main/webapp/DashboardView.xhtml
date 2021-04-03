@@ -44,6 +44,11 @@ and open the template in the editor.
                                 <div class="container">
                                     <div class="card">
                                         
+                                        <h:form>
+                                            <h:outputLabel value="Name:"/>
+                                            <h:outputText value="#{userBean.firstName} #{userBean.lastName}"/>
+                                        </h:form>
+                                        
                                         <p:growl id="messages" showDetail="true"/>
                                         
                                         <p:schedule id="schedule" value="#{homeSchedule.eventModel}" widgetVar="myschedule">
@@ -114,7 +119,7 @@ and open the template in the editor.
                                                             <div class="card-body">
                                                                     <div class="account-settings">
                                                                             <div class="user-profile">
-                                                                                    <h5 class="user-name">John Appleseed</h5>
+                                                                                <h5 class="user-name">John Appleseed</h5>
                                                                                     <h6 class="user-email">jappleseed@apple.com</h6>
                                                                             </div>
                                                                             <div class="about">

@@ -122,7 +122,7 @@ public class DBConnection {
         try {
             dbConnection = dataSource.getConnection();
             dbStatement = dbConnection.createStatement();
-            String query = String.format("SELECT * FROM Users WHERE email = %s and password = %s", 
+            String query = String.format("SELECT * FROM Users WHERE username = '%s' and password = '%s'", 
                     username, password);
             System.out.println("Query used: " + query);
 
@@ -130,9 +130,10 @@ public class DBConnection {
             if (result.next()) {
                 user = new User();
                 user.setUsername(username);
-                user.setFirstName(result.getString("username"));
-                user.setLastName(result.getString("first_name"));
+                user.setFirstName(result.getString("first_name"));
+                user.setLastName(result.getString("last_name"));
                 user.setEmail(result.getString("email"));
+                
             }
             
         } catch(SQLException e) {

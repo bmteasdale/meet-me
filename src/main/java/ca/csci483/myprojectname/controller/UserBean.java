@@ -30,6 +30,7 @@ public class UserBean implements Serializable {
     private String email;
     private String bio;  
     private boolean registrationFail;
+    private boolean successfulLogin;
     
     public UserBean(){
     }
@@ -68,9 +69,49 @@ public class UserBean implements Serializable {
             context.addMessage(null, new FacesMessage("Success", "You have successfully registered!"));
         }
         else {
-            context.addMessage(null, new FacesMessage("Error", "Please try again!"));
+            context.addMessage(null, new FacesMessage("Error", "Sorry, Please try again!"));
         }
+        
     }
+    
+    public void showLoginMessage(){
+        FacesContext context = FacesContext.getCurrentInstance();
+        
+        if (this.successfulLogin == true){
+            context.addMessage(null, new FacesMessage("Success", "Successful Login!"));
+        }
+        else {
+            context.addMessage(null, new FacesMessage("Error", "Sorry, we could't find an account with those credentials!"));
+        }
+        
+    }
+    
+    public String loginValidation(String username, String password) {
+        this.successfulLogin = false;
+        DBConnection dbc = new DBConnection();
+        User currentUser = dbc.findUser(username, password);
+        if (currentUser != null) {
+            this.successfulLogin = true;
+            this.password = null;
+            this.firstName = currentUser.getFirstName();
+            this.lastName = currentUser.getLastName();
+            this.username = currentUser.getUsername();
+            this.email = currentUser.getEmail();
+            return "success";
+        }
+        this.password = null;
+        
+        return "fail";
+    }
+        
+    public boolean isSuccessfulLogin() {
+        return successfulLogin;
+    }
+
+    public void setSuccessfulLogin(boolean successfulLogin) {
+        this.successfulLogin = successfulLogin;
+    }
+    
     
     public String getUsername() {
         return username;

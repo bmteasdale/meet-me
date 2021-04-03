@@ -32,15 +32,16 @@
                 </nav>
                 
                 <!-- Login Form -->
-                <form style="font-family: Raleway; margin: 0 auto; width: 50%; text-align: center;">
+                <h:form style="font-family: Raleway; margin: 0 auto; width: 50%; text-align: center;">
                     <img src="../resources/images/secure_login.png" alt="secureLogin" style="height: 200px;"/>
-                    <div class="card">
+                    
                         <br/><br/>
                         <h2 style="font-weight: bold">Welcome to MeetMe</h2><br/>
                         <h3>Login</h3><br/>
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>
-                            <input 
+                            <h:inputText 
+                                id="username"
                                 value="#{userBean.username}"
                                 class="form-control" 
                                 a:placeholder="Username" 
@@ -49,19 +50,19 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1"><i class="fa fa-lock"></i></span>
                             <h:inputSecret 
+                                id="password"
                                 value="#{userBean.password}"
                                 class="form-control" 
                                 a:placeholder="Password" 
                                 required="true"/>
                         </div>
-                        <div class="d-grid gap-2">
-                            <h:commandButton 
-                                value="Login" 
-                                class="btn btn-primary" 
-                                actionListener="#{userBean.showLoginMessage()}"
-                                action="#{userBean.loginValidation(userBean.username, userBean.password)}" 
-                                />
-                        </div>
+                        <h:commandButton 
+                            value="Login" 
+                            class="btn btn-primary" 
+                            accesskey="" actionListener="#{userBean.showLoginMessage()}"
+                            action="#{userBean.loginValidation(userBean.username, userBean.password)}" 
+                        />
+                        <br/>
                         <br/>
                         <hr style="margin: 0 auto; width: 75%"/>
                         <br/>
@@ -69,10 +70,9 @@
                             <p>Don't already have an account?</p>
                             <h:button value="Create New Account" class="btn btn-primary" outcome="register"></h:button>
                         </div>
-                    </div>
-                </form>
-
+                    <br/>
                 <br/><br/>
+                </h:form>
             </p:layoutUnit>
         </p:layout>
     </ui:define>
