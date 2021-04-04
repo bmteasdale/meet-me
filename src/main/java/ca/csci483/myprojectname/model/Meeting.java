@@ -8,6 +8,7 @@ package ca.csci483.myprojectname.model;
 import java.io.Serializable;
 import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 
 /**
  *

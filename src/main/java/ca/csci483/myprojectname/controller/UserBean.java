@@ -6,8 +6,10 @@
 package ca.csci483.myprojectname.controller;
 
 import ca.csci483.myprojectname.model.DBConnection;
+import ca.csci483.myprojectname.model.Meeting;
 import ca.csci483.myprojectname.model.User;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.faces.application.FacesMessage;
@@ -119,30 +121,10 @@ public class UserBean implements Serializable {
             this.phone = currentUser.getPhone();
             this.userMeetingIds = currentUser.getUserMeetingIds();
             
-            // print
-            System.out.println("Meeting IDs string:" + this.userMeetingIds);
-            
-            // parse meetindIds string
             userMeetingIds = parseUserMeetingIds(userMeetingIds);
-            
-            // split parsed string into list
             this.userMeetingIdsList = Arrays.asList(userMeetingIds.split(","));
             
-            // print
-            System.out.println("Meeting IDs list: " + userMeetingIdsList);
-            for (int i = 0; i < userMeetingIdsList.size(); i++) {
-                System.out.println(userMeetingIdsList.get(i));
-            }
-            
-            /*
-            Print results:
-                Meeting IDs string:{"ids": [1, 2, 3, 4]}|#]
-                Meeting IDs list: [1, 2, 3, 4]|#]
-                1|#]
-                2|#]
-                3|#]
-                4|#]
-            */
+            allUserMeetings = dbc.findMeetings(userMeetingIdsList);
             
             return "success";
         }

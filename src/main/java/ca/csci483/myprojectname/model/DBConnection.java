@@ -203,7 +203,7 @@ public class DBConnection {
         return true;
     }
     
-    public List<Meeting> findMeetings(String username){
+    public List<Meeting> findMeetings(List<String> userMeetingIds){
         Connection dbConnection = null;
         Statement dbStatement = null;
         Meeting meeting = null;
@@ -212,26 +212,33 @@ public class DBConnection {
         try {
             dbConnection = dataSource.getConnection();
             dbStatement = dbConnection.createStatement();
-            String query = String.format("SELECT * FROM Meetings WHERE JSON_CONTAINS(attendees, '{'ids' : '%s'}');",
-                    username);
-            System.out.println("Query used: " + query);
-            
             allMeetings = new ArrayList<>();
             
-            ResultSet result = dbStatement.executeQuery(query);
-            if (result.next()) {
-                meeting = new Meeting();
-                meeting.setMeetingId(result.getString("meeting_id"));
-                meeting.setStartDate(result.getDate("start_date"));
-                meeting.setEndDate(result.getDate("end_date"));
-                meeting.setStartTime(result.getTime("start_time"));
-                meeting.setEndTime(result.getTime("end_time"));
-                meeting.setTitle(result.getString("title"));
-                meeting.setDescription(result.getString("description"));
-                meeting.setLocation(result.getString("location"));
-                meeting.setChairPerson(result.getString("chairperson"));
-                meeting.setAttendees(result.getString("attendees"));
-                allMeetings.add(meeting);
+            for (int i = 0; i < userMeetingIds.size(); i++) {
+                
+                String query = String.format("SELECT * FROM Meetings WHERE meeting_id = '%s'",
+                    userMeetingIds.get(i));
+                System.out.println("Query used: " + query);
+                
+                ResultSet result = dbStatement.executeQuery(query);
+                if (result.next()) {
+                    meeting = new Meeting();
+                    meeting.setMeetingId(result.getString("meeting_id"));
+                    meeting.setStartDate(result.getDate("start_date"));
+                    meeting.setEndDate(result.getDate("end_date"));
+                    meeting.setStartTime(result.getTime("start_time"));
+                    meeting.setEndTime(result.getTime("end_time"));
+                    meeting.setTitle(result.getString("title"));
+                    meeting.setDescription(result.getString("description"));    
+                    meeting.setLocation(result.getString("location"));
+                    meeting.setChairPerson(result.getString("chairperson"));
+                    meeting.setAttendees(result.getString("attendees"));
+                    
+                    System.out.println("MEETING:: " + result.getString("title"));
+                    
+                    allMeetings.add(meeting);
+                }
+                
             }
             
         } catch(SQLException e) {
