@@ -8,8 +8,6 @@ package ca.csci483.myprojectname.controller;
 import ca.csci483.myprojectname.model.DBConnection;
 import ca.csci483.myprojectname.model.User;
 import java.io.Serializable;
-import java.net.UnknownHostException;
-import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -29,7 +27,7 @@ public class UserBean implements Serializable {
     private String lastName;
     private String email;
     private String bio;  
-    private boolean registrationFail;
+    private boolean successfulRegistration;
     private boolean successfulLogin;
     
     public UserBean(){
@@ -43,27 +41,39 @@ public class UserBean implements Serializable {
         this.email = email;
         this.password = password;
         this.confirmPassword = confirmPassword;
+        
+        DBConnection dbc = new DBConnection();
+        boolean duplicateUsername = dbc.duplicateUsername(username);
         boolean validRegistration = password.equals(confirmPassword);
-            
-        if(validRegistration) {
-            DBConnection dbc = new DBConnection();
-            this.registrationFail = !(dbc.registerUser(username, password, firstName, lastName, email));
+        
+        if(validRegistration && !duplicateUsername) {
+            this.successfulRegistration = dbc.registerUser(username, password, firstName, lastName, email);
         }
         else {
-            return "registrationFail";
-        }
+            this.successfulRegistration = false;
             
+            if(!validRegistration){
+                showRegistrationMessage("Passwords do not match!");
+            }
+            else {
+                showRegistrationMessage("Sorry, this username already exists!");
+            }
+            return "";
+        }
+        
+        showRegistrationMessage("You have successfully registered!");
         return "registrationSuccess";
     }
     
-    public void showRegistrationMessage(){
+    public void showRegistrationMessage(String message){
         FacesContext context = FacesContext.getCurrentInstance();
         
-        if (this.registrationFail == false){
-            context.addMessage(null, new FacesMessage("Success", "You have successfully registered!"));
+        if (successfulRegistration == true){
+            context.addMessage(null, new FacesMessage("Success", message));
+            context.getExternalContext().getFlash().setKeepMessages(true);
         }
         else {
-            context.addMessage(null, new FacesMessage("Error", "Sorry, Please try again!"));
+            context.addMessage(null, new FacesMessage("Error", message));
         }
         
     }
@@ -163,12 +173,12 @@ public class UserBean implements Serializable {
         this.bio = bio;
     }
 
-    public boolean isRegistrationFail() {
-        return registrationFail;
+    public boolean isSuccessfulRegistration() {
+        return successfulRegistration;
     }
 
-    public void setRegistrationFail(boolean registrationFail) {
-        this.registrationFail = registrationFail;
+    public void setSuccessfulRegistration(boolean successfulRegistration) {
+        this.successfulRegistration = successfulRegistration;
     }
     
     

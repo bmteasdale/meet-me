@@ -114,6 +114,32 @@ public class DBConnection {
         return true;
     }
     
+    public boolean duplicateUsername(String username){
+        Connection dbConnection = null;
+        Statement dbStatement = null;
+        
+        try {
+            dbConnection = dataSource.getConnection();
+            dbStatement = dbConnection.createStatement();
+            
+            System.out.println("Connection established and statement issued");
+            String query = String.format(
+                "SELECT * FROM Users WHERE username = '%s'", username);
+            System.out.println("Query used: " + query);
+            
+            ResultSet result = dbStatement.executeQuery(query);
+            if (result.next()) {
+                return true;
+            }
+            
+        } catch(SQLException e) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, e);
+            this.close(null, dbStatement, dbConnection);
+        }
+        this.close(null, dbStatement, dbConnection);
+        return false;
+    }
+    
     public User findUser (String username, String password) {
         Connection dbConnection = null;
         Statement dbStatement = null;

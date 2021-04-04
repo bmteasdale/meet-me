@@ -86,10 +86,11 @@ and open the template in the editor.
                                 a:placeholder="Confirm Password" 
                                 required="true"/>
                         </div>
-                        <h:commandButton 
+                        <p:commandButton 
                             class="btn btn-primary" 
                             value="Register"
-                            actionListener="#{userBean.showRegistrationMessage()}"
+                            update="registerGrowl"
+                            style="background: #0d6efd; color: #ffffff"
                             action="#{userBean.handleRegistration(userBean.firstName, userBean.lastName, userBean.username, userBean.email, userBean.password, userBean.confirmPassword)}"
                             /> 
                         <br/><br/>
