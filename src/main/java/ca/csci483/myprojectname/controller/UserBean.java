@@ -8,6 +8,8 @@ package ca.csci483.myprojectname.controller;
 import ca.csci483.myprojectname.model.DBConnection;
 import ca.csci483.myprojectname.model.User;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -32,6 +34,8 @@ public class UserBean implements Serializable {
     private String state;
     private String zipCode;
     private String phone;
+    private String meetingIds;
+    private List<String> meetingIdsList;
     private boolean successfulRegistration;
     private boolean successfulLogin;
     
@@ -112,11 +116,56 @@ public class UserBean implements Serializable {
             this.state = currentUser.getState();
             this.zipCode = currentUser.getZipCode();
             this.phone = currentUser.getPhone();
+            this.meetingIds = currentUser.getMeetingIds();
+            
+            System.out.println("Meeting IDs string:" + this.meetingIds);
+            
+            // parse meetindIds string
+            meetingIds = parseMeetingIds(meetingIds);
+            
+            // split string into list
+            this.meetingIdsList = Arrays.asList(meetingIds.split(","));
+            
+            // print
+            System.out.println("Meeting IDs list: " + meetingIdsList);
+            for (int i = 0; i < meetingIdsList.size(); i++) {
+                System.out.println(meetingIdsList.get(i));
+            }
+            
+            /*
+            Print results:
+                Meeting IDs string:{"ids": [1, 2, 3, 4]}|#]
+                Meeting IDs list: [1, 2, 3, 4]|#]
+                1|#]
+                2|#]
+                3|#]
+                4|#]
+            */
+            
             return "success";
         }
         this.password = null;
         
         return "fail";
+    }
+    
+    public String parseMeetingIds(String ids) {
+    
+        // remove curly braces
+        ids = ids.substring(ids.indexOf(('{')) + 1);
+        ids = ids.substring(0, ids.indexOf(('}')));
+            
+        // get string after ':' (removes '"ids" :')
+        ids = ids.substring(ids.indexOf((':')) + 1);
+            
+        // remove whitespaces
+        ids = ids.replaceAll("\\s","");
+            
+        // remove square brackets
+        ids = ids.substring(ids.indexOf(('[')) + 1);
+        ids = ids.substring(0, ids.indexOf((']')));
+        
+        return ids;
     }
     
     public String editUserInfo(String firstName, String username, String email, String street, String city, String state, String zipCode, String phone){
@@ -255,6 +304,22 @@ public class UserBean implements Serializable {
 
     public void setSuccessfulRegistration(boolean successfulRegistration) {
         this.successfulRegistration = successfulRegistration;
+    }
+
+    public String getMeetingIds() {
+        return meetingIds;
+    }
+
+    public void setMeetingIds(String meetingIds) {
+        this.meetingIds = meetingIds;
+    }
+
+    public List<String> getMeetingIdsList() {
+        return meetingIdsList;
+    }
+
+    public void setMeetingIdsList(List<String> meetingIdsList) {
+        this.meetingIdsList = meetingIdsList;
     }
     
     

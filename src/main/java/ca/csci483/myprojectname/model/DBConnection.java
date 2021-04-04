@@ -165,6 +165,8 @@ public class DBConnection {
                 user.setState(result.getString("state"));
                 user.setZipCode(result.getString("zip_code"));
                 user.setPhone(result.getString("phone"));
+                user.setMeetingIds(result.getString("meeting_ids"));
+                
             }
             
         } catch(SQLException e) {
