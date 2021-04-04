@@ -27,6 +27,11 @@ public class UserBean implements Serializable {
     private String lastName;
     private String email;
     private String bio;  
+    private String street;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String phone;
     private boolean successfulRegistration;
     private boolean successfulLogin;
     
@@ -101,11 +106,42 @@ public class UserBean implements Serializable {
             this.lastName = currentUser.getLastName();
             this.username = currentUser.getUsername();
             this.email = currentUser.getEmail();
+            this.bio = currentUser.getBio();
+            this.street = currentUser.getStreet();
+            this.city = currentUser.getCity();
+            this.state = currentUser.getState();
+            this.zipCode = currentUser.getZipCode();
+            this.phone = currentUser.getPhone();
             return "success";
         }
         this.password = null;
         
         return "fail";
+    }
+    
+    public String editUserInfo(String firstName, String username, String email, String street, String city, String state, String zipCode, String phone){
+        
+        /* Fix:
+            - full name
+            - username duplication
+        */
+        
+        DBConnection dbc = new DBConnection();
+        boolean editUserSuccess = dbc.editUserInfo(firstName, lastName, username, email, street, city, state, zipCode, phone);
+        
+        if(editUserSuccess == false){
+            showMessage("Error", "Sorry, something went wrong!");
+            return "";
+        }
+        else{
+            showMessage("Success", "Account settings have been updated!");
+            return "";
+        }
+    }
+    
+    public void showMessage(String title, String message){
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(title, message));
     }
         
     public boolean isSuccessfulLogin() {
@@ -171,6 +207,46 @@ public class UserBean implements Serializable {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public boolean isSuccessfulRegistration() {

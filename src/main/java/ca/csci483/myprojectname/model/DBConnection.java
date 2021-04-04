@@ -159,7 +159,12 @@ public class DBConnection {
                 user.setFirstName(result.getString("first_name"));
                 user.setLastName(result.getString("last_name"));
                 user.setEmail(result.getString("email"));
-                
+                user.setBio(result.getString("bio"));
+                user.setStreet(result.getString("street"));
+                user.setCity(result.getString("city"));
+                user.setState(result.getString("state"));
+                user.setZipCode(result.getString("zip_code"));
+                user.setPhone(result.getString("phone"));
             }
             
         } catch(SQLException e) {
@@ -169,5 +174,30 @@ public class DBConnection {
         }
         this.close(null, dbStatement, dbConnection);
         return user;
+    }
+    
+    public boolean editUserInfo(String firstName, String lastName, String username, String email, String street, String city, String state, String zipCode, String phone){
+        Connection dbConnection = null;
+        Statement dbStatement = null;
+        
+        try {
+            dbConnection = dataSource.getConnection();
+            dbStatement = dbConnection.createStatement();
+            System.out.println("Connection established and statement issued");
+            String query = String.format(
+                    "UPDATE Users "
+                    + "SET first_name = '%s', last_name = '%s', username = '%s', email = '%s',  street = '%s',  city = '%s',  state = '%s',  zip_code = '%s', phone = '%s'"
+                    + "WHERE username = '%s'",
+                    firstName, lastName, username, email, street, city, state, zipCode, phone, username);
+            System.out.println("Query used: " + query);
+            dbStatement.executeUpdate(query);
+            
+        } catch(SQLException e) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, e);
+            this.close(null, dbStatement, dbConnection);
+            return false;
+        }
+        this.close(null, dbStatement, dbConnection);
+        return true;
     }
 }
