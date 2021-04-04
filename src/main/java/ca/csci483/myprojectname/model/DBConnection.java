@@ -165,7 +165,7 @@ public class DBConnection {
                 user.setState(result.getString("state"));
                 user.setZipCode(result.getString("zip_code"));
                 user.setPhone(result.getString("phone"));
-                user.setMeetingIds(result.getString("meeting_ids"));
+                user.setUserMeetingIds(result.getString("meeting_ids"));
                 
             }
             
@@ -201,5 +201,46 @@ public class DBConnection {
         }
         this.close(null, dbStatement, dbConnection);
         return true;
+    }
+    
+    public List<Meeting> findMeetings(String username){
+        Connection dbConnection = null;
+        Statement dbStatement = null;
+        Meeting meeting = null;
+        List<Meeting> allMeetings = null;
+        
+        try {
+            dbConnection = dataSource.getConnection();
+            dbStatement = dbConnection.createStatement();
+            String query = String.format("SELECT * FROM Meetings WHERE JSON_CONTAINS(attendees, '{'ids' : '%s'}');",
+                    username);
+            System.out.println("Query used: " + query);
+            
+            allMeetings = new ArrayList<>();
+            
+            ResultSet result = dbStatement.executeQuery(query);
+            if (result.next()) {
+                meeting = new Meeting();
+                meeting.setMeetingId(result.getString("meeting_id"));
+                meeting.setStartDate(result.getDate("start_date"));
+                meeting.setEndDate(result.getDate("end_date"));
+                meeting.setStartTime(result.getTime("start_time"));
+                meeting.setEndTime(result.getTime("end_time"));
+                meeting.setTitle(result.getString("title"));
+                meeting.setDescription(result.getString("description"));
+                meeting.setLocation(result.getString("location"));
+                meeting.setChairPerson(result.getString("chairperson"));
+                meeting.setAttendees(result.getString("attendees"));
+                allMeetings.add(meeting);
+            }
+            
+        } catch(SQLException e) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, e);
+            this.close(null, dbStatement, dbConnection);
+            return allMeetings;
+        }
+        this.close(null, dbStatement, dbConnection);
+        return allMeetings;
+        
     }
 }

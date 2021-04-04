@@ -34,8 +34,9 @@ public class UserBean implements Serializable {
     private String state;
     private String zipCode;
     private String phone;
-    private String meetingIds;
-    private List<String> meetingIdsList;
+    private String userMeetingIds;
+    private List<String> userMeetingIdsList;
+    private List<Meeting> allUserMeetings;
     private boolean successfulRegistration;
     private boolean successfulLogin;
     
@@ -116,20 +117,21 @@ public class UserBean implements Serializable {
             this.state = currentUser.getState();
             this.zipCode = currentUser.getZipCode();
             this.phone = currentUser.getPhone();
-            this.meetingIds = currentUser.getMeetingIds();
-            
-            System.out.println("Meeting IDs string:" + this.meetingIds);
-            
-            // parse meetindIds string
-            meetingIds = parseMeetingIds(meetingIds);
-            
-            // split string into list
-            this.meetingIdsList = Arrays.asList(meetingIds.split(","));
+            this.userMeetingIds = currentUser.getUserMeetingIds();
             
             // print
-            System.out.println("Meeting IDs list: " + meetingIdsList);
-            for (int i = 0; i < meetingIdsList.size(); i++) {
-                System.out.println(meetingIdsList.get(i));
+            System.out.println("Meeting IDs string:" + this.userMeetingIds);
+            
+            // parse meetindIds string
+            userMeetingIds = parseUserMeetingIds(userMeetingIds);
+            
+            // split parsed string into list
+            this.userMeetingIdsList = Arrays.asList(userMeetingIds.split(","));
+            
+            // print
+            System.out.println("Meeting IDs list: " + userMeetingIdsList);
+            for (int i = 0; i < userMeetingIdsList.size(); i++) {
+                System.out.println(userMeetingIdsList.get(i));
             }
             
             /*
@@ -149,7 +151,7 @@ public class UserBean implements Serializable {
         return "fail";
     }
     
-    public String parseMeetingIds(String ids) {
+    public String parseUserMeetingIds(String ids) {
     
         // remove curly braces
         ids = ids.substring(ids.indexOf(('{')) + 1);
@@ -306,20 +308,28 @@ public class UserBean implements Serializable {
         this.successfulRegistration = successfulRegistration;
     }
 
-    public String getMeetingIds() {
-        return meetingIds;
+    public String getUserMeetingIds() {
+        return userMeetingIds;
     }
 
-    public void setMeetingIds(String meetingIds) {
-        this.meetingIds = meetingIds;
+    public void setuserMeetingIds(String userMeetingIds) {
+        this.userMeetingIds = userMeetingIds;
     }
 
-    public List<String> getMeetingIdsList() {
-        return meetingIdsList;
+    public List<String> getUserMeetingIdsList() {
+        return userMeetingIdsList;
     }
 
-    public void setMeetingIdsList(List<String> meetingIdsList) {
-        this.meetingIdsList = meetingIdsList;
+    public void setUserMeetingIdsList(List<String> userMeetingIdsList) {
+        this.userMeetingIdsList = userMeetingIdsList;
+    }
+
+    public List<Meeting> getAllUserMeetings() {
+        return allUserMeetings;
+    }
+
+    public void setAllUserMeetings(List<Meeting> allUserMeetings) {
+        this.allUserMeetings = allUserMeetings;
     }
     
     

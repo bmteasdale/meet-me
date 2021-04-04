@@ -25,7 +25,7 @@ public class User implements Serializable{
     private String state;
     private String zipCode;
     private String phone;
-    private String meetingIds;
+    private String userMeetingIds;
 
     public User(String username, String password, String firstName, String lastName, String email) {
         this.username = username;
@@ -136,12 +136,12 @@ public class User implements Serializable{
         this.phone = phone;
     }
 
-    public String getMeetingIds() {
-        return meetingIds;
+    public String getUserMeetingIds() {
+        return userMeetingIds;
     }
 
-    public void setMeetingIds(String meetindIds) {
-        this.meetingIds = meetindIds;
+    public void setUserMeetingIds(String userMeetingIds) {
+        this.userMeetingIds = userMeetingIds;
     }
     
     

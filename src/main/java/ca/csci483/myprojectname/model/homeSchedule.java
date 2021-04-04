@@ -36,10 +36,10 @@ public class homeSchedule implements Serializable {
         // TEST
         DefaultScheduleEvent<?> event = DefaultScheduleEvent.builder()
 				.title("Champions League Match")
-				.startDate(LocalDateTime.now().minusDays(1).withHour(20).withMinute(0).withSecond(0).withNano(0))
-				.endDate(LocalDateTime.now().minusDays(1).withHour(23).withMinute(0).withSecond(0).withNano(0))
+				.startDate(LocalDateTime.now().withHour(20).withMinute(0))
+				.endDate(LocalDateTime.now().withHour(23).withMinute(0))
 				.description("Team A vs. Team B")
-				.build();
+                                .build();
 	eventModel.addEvent(event);
         
     }
