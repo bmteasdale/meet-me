@@ -3,20 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.csci483.myprojectname.model;
+package ca.csci483.myprojectname.controller;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.List;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 
 /**
  *
  * @author Rachel
  */
-public class Meeting implements Serializable{
+@SessionScoped
+@Named("meetingBean")
+public class MeetingBean implements Serializable{
     private String meetingId;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -27,21 +28,10 @@ public class Meeting implements Serializable{
     private String location;
     private String chairPerson;
     private String attendees;
+    private String participant;
+    private String today;
     
-    public Meeting(String meetingId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, String title, String description, String location, String chairperson, String attendees){
-        this.meetingId = meetingId;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.title = title;
-        this.description = description;
-        this.location = location;
-        this.chairPerson = chairperson;
-        this.attendees = attendees;
-    }
-    
-    Meeting(){
+    public MeetingBean(){
     }
 
     public String getMeetingId() {
@@ -122,6 +112,22 @@ public class Meeting implements Serializable{
 
     public void setAttendees(String attendees) {
         this.attendees = attendees;
+    }
+
+    public String getParticipant() {
+        return participant;
+    }
+
+    public void setParticipant(String participant) {
+        this.participant = participant;
+    }
+
+    public String getToday() {
+        return today;
+    }
+
+    public void setToday(String today) {
+        this.today = today;
     }
     
     

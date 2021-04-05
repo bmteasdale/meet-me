@@ -19,7 +19,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -160,11 +163,6 @@ public class DBConnection {
                 user.setLastName(result.getString("last_name"));
                 user.setEmail(result.getString("email"));
                 user.setBio(result.getString("bio"));
-                user.setStreet(result.getString("street"));
-                user.setCity(result.getString("city"));
-                user.setState(result.getString("state"));
-                user.setZipCode(result.getString("zip_code"));
-                user.setPhone(result.getString("phone"));
                 user.setUserMeetingIds(result.getString("meeting_ids"));
                 
             }
@@ -224,17 +222,15 @@ public class DBConnection {
                 if (result.next()) {
                     meeting = new Meeting();
                     meeting.setMeetingId(result.getString("meeting_id"));
-                    meeting.setStartDate(result.getDate("start_date"));
-                    meeting.setEndDate(result.getDate("end_date"));
-                    meeting.setStartTime(result.getTime("start_time"));
-                    meeting.setEndTime(result.getTime("end_time"));
+                    meeting.setStartDate(LocalDate.parse(result.getString("start_date")));
+                    meeting.setEndDate(LocalDate.parse(result.getString("end_date")));
+                    meeting.setStartTime(LocalTime.parse(result.getString("start_time")));
+                    meeting.setEndTime(LocalTime.parse(result.getString("end_time")));
                     meeting.setTitle(result.getString("title"));
                     meeting.setDescription(result.getString("description"));    
                     meeting.setLocation(result.getString("location"));
                     meeting.setChairPerson(result.getString("chairperson"));
                     meeting.setAttendees(result.getString("attendees"));
-                    
-                    System.out.println("MEETING:: " + result.getString("title"));
                     
                     allMeetings.add(meeting);
                 }
@@ -250,4 +246,48 @@ public class DBConnection {
         return allMeetings;
         
     }
+    
+    public List<Meeting> findAvailableTimeblocks(String username){
+        
+        Connection dbConnection = null;
+        Statement dbStatement = null;
+        List<Meeting> selectedUserMeetings = null;
+        
+        try {
+            dbConnection = dataSource.getConnection();
+            dbStatement = dbConnection.createStatement();
+            List<String> selectedUserMeetingsIdList = null;
+            selectedUserMeetings = new ArrayList<>();
+            String ids = null;
+            
+            String query = String.format("SELECT * FROM Users WHERE username = '%s'",
+                    username);
+                System.out.println("Query used: " + query);
+            
+            
+            ResultSet result = dbStatement.executeQuery(query);
+            if (result.next()) {
+                ids = result.getString("meeting_ids");
+                ids = ids.substring(ids.indexOf(('{')) + 1);
+                ids = ids.substring(0, ids.indexOf(('}')));
+                ids = ids.substring(ids.indexOf((':')) + 1);
+                ids = ids.replaceAll("\\s","");
+                ids = ids.substring(ids.indexOf(('[')) + 1);
+                ids = ids.substring(0, ids.indexOf((']')));
+                
+                selectedUserMeetingsIdList = Arrays.asList(ids.split(","));
+            }
+            
+            selectedUserMeetings = findMeetings(selectedUserMeetingsIdList);
+            
+        } catch(SQLException e) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, e);
+            this.close(null, dbStatement, dbConnection);
+            return selectedUserMeetings;
+        }
+        this.close(null, dbStatement, dbConnection);
+        return selectedUserMeetings;
+        
+    }
+    
 }

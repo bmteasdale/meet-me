@@ -25,7 +25,9 @@ and open the template in the editor.
                       </button>
                       <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
                         <div class="navbar-nav" style="font-family: Raleway;">              
-                          <p:link class="nav-link" outcome="logout">Logout</p:link>
+                        <h:form>
+                            <h:commandLink class="nav-link" action="#{userBean.logout()}">Logout</h:commandLink>
+                        </h:form>
                         </div>
                       </div>
                     </div>
@@ -80,14 +82,14 @@ and open the template in the editor.
                                     </p:dialog>
                                     <div class="card">
                                         <p:growl id="messages" showDetail="true"/>
-                                        <p:schedule id="schedule" value="#{homeSchedule.eventModel}" widgetVar="myschedule"></p:schedule>
+                                        <p:schedule id="schedule" value="#{userBean.eventModel}" widgetVar="myschedule"></p:schedule>
                                     </div>
                                 </div>
                                 
                             </div>
                             <div class="tab-pane fade" id="v-pills-upcoming" role="tabpanel" aria-labelledby="v-pills-upcoming-tab">
                                 <br/>
-                                <p:dataTable var="meeting" value="#{dtBasicView.products}" reflow="true" rows="5" paginator="true" style="margin-left: 20px;">
+                                <p:dataTable var="meeting" value="#{userBean.allUserMeetings}" reflow="true" rows="5" paginator="true" style="margin-left: 20px;">
                                     <p:column headerText="Meeting Title">
                                         <h:outputText value="#{meeting.title}"/>
                                     </p:column>
@@ -101,7 +103,7 @@ and open the template in the editor.
                                     </p:column>
 
                                     <p:column headerText="Start Time">
-                                        <h:outputText value="$#{meeting.startTime}"/>
+                                        <h:outputText value="#{meeting.startTime}"/>
                                     </p:column>
                                 </p:dataTable>
                             </div>

@@ -9,13 +9,17 @@ import ca.csci483.myprojectname.model.DBConnection;
 import ca.csci483.myprojectname.model.Meeting;
 import ca.csci483.myprojectname.model.User;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import org.primefaces.model.DefaultScheduleEvent;
+import org.primefaces.model.DefaultScheduleModel;
+import org.primefaces.model.ScheduleEvent;
+import org.primefaces.model.ScheduleModel;
 
 /**
  *
@@ -31,16 +35,16 @@ public class UserBean implements Serializable {
     private String lastName;
     private String email;
     private String bio;  
-    private String street;
-    private String city;
-    private String state;
-    private String zipCode;
-    private String phone;
+    
     private String userMeetingIds;
     private List<String> userMeetingIdsList;
     private List<Meeting> allUserMeetings;
+    
     private boolean successfulRegistration;
     private boolean successfulLogin;
+    
+    private ScheduleModel eventModel;
+    private ScheduleEvent<?> event = new DefaultScheduleEvent<>();
     
     public UserBean(){
     }
@@ -114,17 +118,11 @@ public class UserBean implements Serializable {
             this.username = currentUser.getUsername();
             this.email = currentUser.getEmail();
             this.bio = currentUser.getBio();
-            this.street = currentUser.getStreet();
-            this.city = currentUser.getCity();
-            this.state = currentUser.getState();
-            this.zipCode = currentUser.getZipCode();
-            this.phone = currentUser.getPhone();
             this.userMeetingIds = currentUser.getUserMeetingIds();
-            
-            userMeetingIds = parseUserMeetingIds(userMeetingIds);
-            this.userMeetingIdsList = Arrays.asList(userMeetingIds.split(","));
+            this.userMeetingIdsList = parseUserMeetingIds(userMeetingIds);
             
             allUserMeetings = dbc.findMeetings(userMeetingIdsList);
+            addMeetingsToCalendar(allUserMeetings);
             
             return "success";
         }
@@ -133,8 +131,34 @@ public class UserBean implements Serializable {
         return "fail";
     }
     
-    public String parseUserMeetingIds(String ids) {
+    public void addMeetingsToCalendar(List<Meeting> meetings){
+        
+        eventModel = new DefaultScheduleModel();
+        
+        for (int i = 0; i < meetings.size(); i++) {
+            
+            Meeting currentMeeting = meetings.get(i);
+            
+            LocalDateTime startDateTime = LocalDateTime.of(currentMeeting.getStartDate(), currentMeeting.getStartTime());
+            LocalDateTime endDateTime = LocalDateTime.of(currentMeeting.getEndDate(), currentMeeting.getEndTime());
+            
+            
+            event = DefaultScheduleEvent.builder()
+                    .title(currentMeeting.getTitle())
+                    .description(currentMeeting.getDescription())
+                    .startDate(startDateTime)
+                    .endDate(endDateTime)
+                    .build();
+            eventModel.addEvent(event);
+            
+        }
+        
+    }
     
+    public List<String> parseUserMeetingIds(String ids) {
+    
+        List<String> allIds = null;
+        
         // remove curly braces
         ids = ids.substring(ids.indexOf(('{')) + 1);
         ids = ids.substring(0, ids.indexOf(('}')));
@@ -149,7 +173,8 @@ public class UserBean implements Serializable {
         ids = ids.substring(ids.indexOf(('[')) + 1);
         ids = ids.substring(0, ids.indexOf((']')));
         
-        return ids;
+        allIds = Arrays.asList(ids.split(","));
+        return allIds;
     }
     
     public String editUserInfo(String firstName, String username, String email, String street, String city, String state, String zipCode, String phone){
@@ -170,6 +195,17 @@ public class UserBean implements Serializable {
             showMessage("Success", "Account settings have been updated!");
             return "";
         }
+    }
+    
+    public String logout() {
+        this.successfulLogin = false;
+        this.firstName = null;
+        this.lastName = null;
+        this.username = null;
+        this.email = null;
+        this.bio = null;
+        this.userMeetingIds = null;
+        return "logout";
     }
     
     public void showMessage(String title, String message){
@@ -242,46 +278,6 @@ public class UserBean implements Serializable {
         this.bio = bio;
     }
 
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public boolean isSuccessfulRegistration() {
         return successfulRegistration;
     }
@@ -312,6 +308,22 @@ public class UserBean implements Serializable {
 
     public void setAllUserMeetings(List<Meeting> allUserMeetings) {
         this.allUserMeetings = allUserMeetings;
+    }
+
+    public ScheduleModel getEventModel() {
+        return eventModel;
+    }
+
+    public void setEventModel(ScheduleModel eventModel) {
+        this.eventModel = eventModel;
+    }
+
+    public ScheduleEvent<?> getEvent() {
+        return event;
+    }
+
+    public void setEvent(ScheduleEvent<?> event) {
+        this.event = event;
     }
     
     
