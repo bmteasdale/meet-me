@@ -43,34 +43,44 @@ and open the template in the editor.
                         <div class="tab-content" id="v-pills-tabContent">
                             <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                                 <div class="container">
-                                    <div class="card">
-                                        
-                                        <p:growl id="messages" showDetail="true"/>
-                                        
-                                        <p:schedule id="schedule" value="#{homeSchedule.eventModel}" widgetVar="myschedule">
-                                            <p:ajax event="dateSelect" listener="#{homeSchedule.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();"/>
-                                            <p:ajax event="eventSelect" listener="#{homeSchedule.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();"/>
-                                        </p:schedule>
-                                        
-                                        <p:dialog widgetVar="eventDialog" header="Create New Meeting" showEffect="fade" hideEffect="fade">
-                                            <h:panelGrid id="eventDetails" columns="2" cellpadding="7">
-                                                <p:outputLabel for="title" value="Title" styleClass="p-text-bold"/>
-                                                <p:inputText id="title" value="#{homeSchedule.event.title}" required="true"/>
-                                                <!--
-                                                <p:outputLabel for="from" value="From" styleClass="p-text-bold"/>
-                                                <p:datePicker id="from" value="#{scheduleJava8View.event.startDate}" pattern="dd/MM/yyyy" showTime="true" appendTo="@(body)"/>
-
-                                                <p:outputLabel for="to" value="To" styleClass="p-text-bold"/>
-                                                <p:datePicker id="to" value="#{scheduleJava8View.event.endDate}" pattern="dd/MM/yyyy" showTime="true" appendTo="@(body)"/>
-`                                               -->
-                                            </h:panelGrid>
-
-                                            <div class="p-d-flex p-jc-between p-mt-3">
-                                                <p:commandButton type="reset" value="Reset" styleClass="p-text-bold ui-button-outlined"/>
-                                                <p:commandButton id="addButton" value="Save" action="#{homeSchedule.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
+                                    <div style="margin-left: 75%;">
+                                        <button value="Schedule a Meeting" class="btn btn-primary" style="width: 100%; font-family: Raleway; font-weight: bold;" onclick="PF('dlg1').show()">
+                                            <i class="fa fa-plus-square" style="margin-right: 10px;"></i> Schedule a Meeting
+                                        </button>
+                                        <br /><br />
+                                    </div>
+                                    <p:dialog header="Set a Meeting" widgetVar="dlg1" minHeight="40" width="500" showEffect="fade" style="font-family: Raleway;">
+                                        <h:form style="font-family: Raleway;">
+                                            <f:passThroughAttribute name="autocomplete" value="off"/>
+                                            <h5>What will be the meeting details?</h5><br />
+                                            <div class="input-group mb-3">
+                                                <h:inputText class="form-control" value="#{meetingBean.title}" a:placeholder="Title" required="true"/>
+                                                <h:inputText class="form-control" value="#{meetingBean.location}" a:placeholder="Location" required="true"/>
                                             </div>
-                                        </p:dialog>
-                                        
+                                            <div class="input-group mb-3">
+                                                <h:inputTextarea id="desc" class="form-control" value="#{meetingBean.description}" a:placeholder="Description" style="width: 75%; padding: 5px;" required="true"/><br/>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <h:inputText id="participant" class="form-control" value="#{meetingBean.participant}" a:placeholder="Participant" style="width: 75%; padding: 5px;" required="true"/>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <!-- mindate format yy/mm/dd -->
+                                                <p:datePicker id="basic" a:placeholder="Start Date" value="#{meetingBean.startDate}" mindate="#{meetingBean.today}"/>
+                                            </div>
+                                            <h:commandButton value="Find Availabilities" class="btn btn-primary"/><br />
+                                            <span style="display: flex; align-items: center;">
+                                                <hr style="width:85%"/>
+                                            </span>
+                                            <label>Select Time</label><br/>
+                                            <div class="input-group mb-3">
+                                                <p:selectOneMenu value="#{meetingBean.startTime}" />
+                                            </div>
+                                            <h:commandButton value="Create Meeting" class="btn btn-outline-primary"/>
+                                        </h:form>
+                                    </p:dialog>
+                                    <div class="card">
+                                        <p:growl id="messages" showDetail="true"/>
+                                        <p:schedule id="schedule" value="#{homeSchedule.eventModel}" widgetVar="myschedule"></p:schedule>
                                     </div>
                                 </div>
                                 
@@ -150,6 +160,17 @@ and open the template in the editor.
                                                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                                                     <h6 class="mb-3 text-primary">Personal Details</h6>
                                                                             </div>
+                                                                            <div class="col-lg-12">
+                                                                                    <div class="form-group">
+                                                                                            <label for="username">Username</label>
+                                                                                            <h:inputText
+                                                                                                class="form-control"
+                                                                                                id="username"
+                                                                                                value="#{userBean.username}"
+                                                                                                a:placeholder="Enter username"
+                                                                                                />
+                                                                                    </div>
+                                                                            </div>
                                                                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                                                                     <div class="form-group">
                                                                                             <label for="fullName">Full Name</label>
@@ -172,77 +193,22 @@ and open the template in the editor.
                                                                                                 />
                                                                                     </div>
                                                                             </div>
-                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                                                                    <div class="form-group">
-                                                                                            <label for="username">Username</label>
-                                                                                            <h:inputText
-                                                                                                class="form-control"
-                                                                                                id="username"
-                                                                                                value="#{userBean.username}"
-                                                                                                a:placeholder="Enter username"
-                                                                                                />
-                                                                                    </div>
-                                                                            </div>
-                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                                                                    <div class="form-group">
-                                                                                            <label for="phone">Phone</label>
-                                                                                            <h:inputText
-                                                                                                class="form-control"
-                                                                                                id="phone"
-                                                                                                value="#{userBean.phone}"
-                                                                                                a:placeholder="Enter phone number"
-                                                                                                />
-                                                                                    </div>
-                                                                            </div>
                                                                     </div><br />
                                                                     <div class="row gutters">
-                                                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                                                    <h6 class="mb-3 text-primary">Address</h6>
+                                                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                                <h6 class="mb-3 text-primary">Bio</h6>
+                                                                        </div>
+                                                                        <div class="col-lg-12">
+                                                                            <div class="form-group">
+                                                                            <label for="changeBio">Bio</label>
+                                                                            <h:inputTextarea
+                                                                                id="changeBio"
+                                                                                value="#{userBean.bio}"
+                                                                                rows="5"
+                                                                                style="width: 100%;"
+                                                                                a:placeholder="Enter account bio"/>
                                                                             </div>
-                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                                                                    <div class="form-group">
-                                                                                            <label for="Street">Street</label>
-                                                                                            <h:inputText
-                                                                                                class="form-control"
-                                                                                                id="Street"
-                                                                                                value="#{userBean.street}"
-                                                                                                a:placeholder="Enter Street"
-                                                                                                />
-                                                                                    </div>
-                                                                            </div>
-                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                                                                    <div class="form-group">
-                                                                                            <label for="ciTy">City</label>
-                                                                                            <h:inputText
-                                                                                                class="form-control"
-                                                                                                id="ciTy"
-                                                                                                value="#{userBean.city}"
-                                                                                                a:placeholder="Enter City"
-                                                                                                />
-                                                                                    </div>
-                                                                            </div>
-                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                                                                    <div class="form-group">
-                                                                                            <label for="sTate">State</label>
-                                                                                            <h:inputText
-                                                                                                class="form-control"
-                                                                                                id="sTate"
-                                                                                                value="#{userBean.state}"
-                                                                                                a:placeholder="Enter State"
-                                                                                                />
-                                                                                    </div>
-                                                                            </div>
-                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                                                                    <div class="form-group">
-                                                                                            <label for="zIp">Zip Code</label>
-                                                                                            <h:inputText
-                                                                                                class="form-control"
-                                                                                                id="zIp"
-                                                                                                value="#{userBean.zipCode}"
-                                                                                                a:placeholder="Zip code"
-                                                                                                />
-                                                                                    </div>
-                                                                            </div>
+                                                                        </div>
                                                                     </div><br />
                                                                     <div class="row gutters">
                                                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
