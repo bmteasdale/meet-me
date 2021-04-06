@@ -129,6 +129,11 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
+            <from-outcome>dashboardView</from-outcome>
+            <to-view-id>/DashboardView.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
             <from-action>#{userBean.loginValidation(userBean.username, userBean.password)}</from-action>
             <from-outcome>success</from-outcome>
             <to-view-id>/DashboardView.xhtml</to-view-id>
@@ -150,6 +155,12 @@
             <from-action>#{userBean.handleRegistration(userBean.firstName, userBean.lastName, userBean.username, userBean.email, userBean.password, userBean.confirmPassword)}</from-action>
             <from-outcome>registrationFail</from-outcome>
             <to-view-id>/user/RegisterView.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{meetingBean.createMeeting()}</from-action>
+            <from-outcome>meetingCreated</from-outcome>
+            <to-view-id>/DashboardView.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>

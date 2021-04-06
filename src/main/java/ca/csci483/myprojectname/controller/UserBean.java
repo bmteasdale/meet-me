@@ -9,6 +9,7 @@ import ca.csci483.myprojectname.model.DBConnection;
 import ca.csci483.myprojectname.model.Meeting;
 import ca.csci483.myprojectname.model.User;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -177,7 +178,7 @@ public class UserBean implements Serializable {
         return allIds;
     }
     
-    public String editUserInfo(String firstName, String username, String email, String street, String city, String state, String zipCode, String phone){
+    public String editUserInfo(String firstName, String username, String email, String bio){
         
         /* Fix:
             - full name
@@ -185,7 +186,7 @@ public class UserBean implements Serializable {
         */
         
         DBConnection dbc = new DBConnection();
-        boolean editUserSuccess = dbc.editUserInfo(firstName, lastName, username, email, street, city, state, zipCode, phone);
+        boolean editUserSuccess = dbc.editUserInfo(firstName, lastName, username, email, bio);
         
         if(editUserSuccess == false){
             showMessage("Error", "Sorry, something went wrong!");

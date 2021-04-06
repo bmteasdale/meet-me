@@ -9,6 +9,7 @@ package ca.csci483.myprojectname.model;
  *
  * @author bmteasdale
  */
+import ca.csci483.myprojectname.controller.UserBean;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import ca.csci483.myprojectname.model.User;
 import static com.mysql.cj.MysqlType.JSON;
@@ -24,6 +25,10 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.el.ELContext;
+import javax.faces.context.FacesContext;
+import org.primefaces.shaded.json.JSONArray;
+import org.primefaces.shaded.json.JSONObject;
 
 
 //@ManagedBean(name = "dbConnection")
@@ -176,7 +181,7 @@ public class DBConnection {
         return user;
     }
     
-    public boolean editUserInfo(String firstName, String lastName, String username, String email, String street, String city, String state, String zipCode, String phone){
+    public boolean editUserInfo(String firstName, String lastName, String username, String email, String bio){
         Connection dbConnection = null;
         Statement dbStatement = null;
         
@@ -186,9 +191,9 @@ public class DBConnection {
             System.out.println("Connection established and statement issued");
             String query = String.format(
                     "UPDATE Users "
-                    + "SET first_name = '%s', last_name = '%s', username = '%s', email = '%s',  street = '%s',  city = '%s',  state = '%s',  zip_code = '%s', phone = '%s'"
+                    + "SET first_name = '%s', last_name = '%s', username = '%s', email = '%s',  bio = '%s'"
                     + "WHERE username = '%s'",
-                    firstName, lastName, username, email, street, city, state, zipCode, phone, username);
+                    firstName, lastName, username, email, bio, username);
             System.out.println("Query used: " + query);
             dbStatement.executeUpdate(query);
             
@@ -247,7 +252,7 @@ public class DBConnection {
         
     }
     
-    public List<Meeting> findAvailableTimeblocks(String username){
+    public List<Meeting> findUserMeetings(String username){
         
         Connection dbConnection = null;
         Statement dbStatement = null;
@@ -288,6 +293,125 @@ public class DBConnection {
         this.close(null, dbStatement, dbConnection);
         return selectedUserMeetings;
         
+    }
+    
+    public boolean addMeeting(String startDate, String endDate, String startTime, String endTime, String title, String description, String location, String chairperson, String participant, JSONObject attendees){
+        
+        Connection dbConnection = null;
+        Statement dbStatement = null;
+        
+        try {
+            dbConnection = dataSource.getConnection();
+            dbStatement = dbConnection.createStatement();
+            System.out.println("Connection established and statement issued");
+            String query = String.format(
+                    "INSERT INTO Meetings "
+                    + "(start_date, end_date, start_time, end_time, title, description, location, chairperson, attendees) "
+                    + "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', "
+                    + "'" + attendees + "'" 
+                    + "); ",
+                    startDate,
+                    endDate,
+                    startTime,
+                    endTime,
+                    title,
+                    description,
+                    location,
+                    chairperson
+            );
+            
+            System.out.println("Query used: " + query);
+            dbStatement.executeUpdate(query);
+            
+        } catch(SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            this.close(null, dbStatement, dbConnection);
+            return false;
+        }
+        this.close(null, dbStatement, dbConnection);
+        
+        addMeetingIdToUser(chairperson);
+        addMeetingIdToUser(participant);
+        return true;
+        
+    }
+    
+    public String findLastMeetingId(String username){
+        
+        Connection dbConnection = null;
+        Statement dbStatement = null;
+        String id = null;
+        
+        try {
+            dbConnection = dataSource.getConnection();
+            dbStatement = dbConnection.createStatement();
+            String query = String.format("SELECT * FROM Meetings ORDER BY meeting_id DESC LIMIT 1;");
+            System.out.println("Query used: " + query);
+
+            ResultSet result = dbStatement.executeQuery(query);
+            if (result.next()) {
+                id = result.getString("meeting_id");
+            }
+            
+        } catch(SQLException e) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, e);
+            this.close(null, dbStatement, dbConnection);
+            return "";
+        }
+        this.close(null, dbStatement, dbConnection);
+        return id;
+    }
+    
+    public void addMeetingIdToUser(String username){
+        
+        ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+        UserBean ub = (UserBean) FacesContext.getCurrentInstance().getApplication().getELResolver().getValue(elContext, null, "userBean");
+        String ids = ub.getUserMeetingIds();
+        
+        List<String> allIds = null;
+        ids = ids.substring(ids.indexOf(('{')) + 1);
+        ids = ids.substring(0, ids.indexOf(('}')));
+        ids = ids.substring(ids.indexOf((':')) + 1);
+        ids = ids.replaceAll("\\s","");
+        ids = ids.substring(ids.indexOf(('[')) + 1);
+        ids = ids.substring(0, ids.indexOf((']')));
+        allIds = Arrays.asList(ids.split(","));
+        
+        JSONObject json = new JSONObject();
+        JSONArray array = new JSONArray();
+        
+        String latestID = findLastMeetingId(username);
+        int iLatestID = Integer.parseInt(latestID);
+        
+        for (int i = 0; i < allIds.size(); i++) {
+            int id = Integer.parseInt(allIds.get(i));
+            array.put(id);
+        }
+        array.put(iLatestID);
+        json.put("ids", array);
+        
+        Connection dbConnection = null;
+        Statement dbStatement = null;
+        
+        try {
+            dbConnection = dataSource.getConnection();
+            dbStatement = dbConnection.createStatement();
+            System.out.println("Connection established and statement issued");
+            String query = String.format(
+                    "UPDATE Users "
+                    + "SET meeting_ids =  '" + json + "'"
+                    + "WHERE username = '%s'"
+                    , username
+            );
+            
+            System.out.println("Query used: " + query);
+            dbStatement.executeUpdate(query);
+            
+        } catch(SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            this.close(null, dbStatement, dbConnection);
+        }
+        this.close(null, dbStatement, dbConnection);
     }
     
 }

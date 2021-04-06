@@ -19,7 +19,7 @@ and open the template in the editor.
                 <!-- Navigation Bar -->
                 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-family: Raleway">
                     <div class="container-fluid">
-                      <a class="navbar-brand" href="/dashboard/DashboardView.xhtml">MeetMe</a>
+                      <a class="navbar-brand" href="/DashboardView.xhtml">MeetMe</a>
                       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                       </button>
@@ -51,8 +51,8 @@ and open the template in the editor.
                                         </button>
                                         <br /><br />
                                     </div>
-                                    <p:dialog header="Set a Meeting" widgetVar="dlg1" minHeight="40" width="500" showEffect="fade" style="font-family: Raleway;">
-                                        <h:form style="font-family: Raleway;">
+                                    <p:dialog id="dig1" header="Set a Meeting" widgetVar="dlg1" minHeight="40" width="500" showEffect="fade" style="font-family: Raleway;">
+                                        <h:form id="myForm" style="font-family: Raleway;">
                                             <f:passThroughAttribute name="autocomplete" value="off"/>
                                             <h5>What will be the meeting details?</h5><br />
                                             <div class="input-group mb-3">
@@ -69,15 +69,25 @@ and open the template in the editor.
                                                 <!-- mindate format yy/mm/dd -->
                                                 <p:datePicker id="basic" a:placeholder="Start Date" value="#{meetingBean.startDate}" mindate="#{meetingBean.today}"/>
                                             </div>
-                                            <h:commandButton value="Find Availabilities" class="btn btn-primary"/><br />
+                                            <p:commandButton 
+                                                value="Find Availabilities" 
+                                                class="btn btn-primary" 
+                                                action="#{meetingBean.findAvailabilities(meetingBean.startDate, meetingBean.participant)}" 
+                                                update="myForm"
+                                                style="background: #0d6efd; color: #ffffff">
+                                            </p:commandButton>
+                                            <br />
                                             <span style="display: flex; align-items: center;">
                                                 <hr style="width:85%"/>
                                             </span>
                                             <label>Select Time</label><br/>
                                             <div class="input-group mb-3">
-                                                <p:selectOneMenu value="#{meetingBean.startTime}" />
+                                                <p:selectOneMenu value="#{meetingBean.convertedMeetingTime}" dynamic="true">
+                                                    <f:selectItem itemLabel="Select One" itemValue=""/>
+                                                    <f:selectItems value="#{meetingBean.convertedMeetingTimes}"/>
+                                                </p:selectOneMenu>
                                             </div>
-                                            <h:commandButton value="Create Meeting" class="btn btn-outline-primary"/>
+                                            <h:commandButton value="Create Meeting" class="btn btn-outline-primary" action="#{meetingBean.createMeeting()}"/>
                                         </h:form>
                                     </p:dialog>
                                     <div class="card">
@@ -219,11 +229,8 @@ and open the template in the editor.
                                                                                             id="submit"
                                                                                             class="btn btn-primary"
                                                                                             value="Save Changes"
-                                                                                            action="#{userBean.editUserInfo(userBean.firstName, userBean.username, userBean.email, userBean.street, userBean.city, userBean.state, userBean.zipCode, userBean.phone)}"
+                                                                                            action="#{userBean.editUserInfo(userBean.firstName, userBean.username, userBean.email, userBean.bio)}"
                                                                                             />
-                                                                                            <!--
-                                                                                            <button type="button" id="submit" name="submit" class="btn btn-primary">Save Changes</button>
-                                                                                            -->
                                                                                     </div>
                                                                             </div>
                                                                     </div>
