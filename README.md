@@ -1,4 +1,32 @@
 # MeetMe
+
+## How to Run
+> ## Project Requirements:
+> - [MySQL](https://www.mysql.com/downloads/)
+> - [Apache Maven](https://maven.apache.org/download.cgi)
+> - [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
+> - [Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
+
+To build the project and package the resulting JAR file into the target directory, run the following command in the parent directory:
+```console
+$ mvn package
+```
+
+After the target directory has been successfully created, the payara server can be started by running the following command:
+```console
+$ docker-compose up
+```
+
+Now that the payara server has been successfully set up, all you need to do to view the application is go to the browser of your choice to the link "http://localhost:8080/MeetMe-5.13/"
+
+To later gracefully stop the payara server, press `ctrl + c` and enter the following command in the parent directory:
+```console
+$ docker-compose down
+```
+
+## Project Workflow
+![Worrkflow Diagram](projectWorkflow.png)
+
 ## Abstract
 ### Motivation:
 Scheduling meetings through email can often be tedious and unreliable as participants must negotiate a time and date that works for everyone. The process of emailing back-and-forth can also lead to miscommunication between participants. Our website will allow users to schedule meetings in a simple and convenient manner.
