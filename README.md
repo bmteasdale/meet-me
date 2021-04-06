@@ -24,6 +24,9 @@ To later gracefully stop the payara server, press `ctrl + c` and enter the follo
 $ docker-compose down
 ```
 
+## Project Workflow
+![Worrkflow Diagram](projectWorkflow.png)
+
 ## Abstract
 ### Motivation:
 Scheduling meetings through email can often be tedious and unreliable as participants must negotiate a time and date that works for everyone. The process of emailing back-and-forth can also lead to miscommunication between participants. Our website will allow users to schedule meetings in a simple and convenient manner.
