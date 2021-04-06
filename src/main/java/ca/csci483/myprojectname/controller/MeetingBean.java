@@ -8,6 +8,7 @@ package ca.csci483.myprojectname.controller;
 import ca.csci483.myprojectname.model.DBConnection;
 import ca.csci483.myprojectname.model.Meeting;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -47,7 +48,7 @@ public class MeetingBean implements Serializable{
     private String chairPerson;
     private String attendees;
     private String participant;
-    private Date today; // shows blank screen when set to current date...
+    private String today; // shows blank screen when set to current date...
     private LocalTime meetingTime;
     private String convertedMeetingTime;
     private List<LocalTime> meetingTimes;
@@ -156,7 +157,7 @@ public class MeetingBean implements Serializable{
     
     public String addMeetingToCalendar(String title, String description, LocalTime startTime, LocalTime endTime, LocalDate date){
         
-        eventModel = new DefaultScheduleModel();
+        //eventModel = new DefaultScheduleModel();
         
         LocalDateTime startDateTime = LocalDateTime.of(date, startTime);
         LocalDateTime endDateTime = LocalDateTime.of(date, endTime);
@@ -168,6 +169,8 @@ public class MeetingBean implements Serializable{
                 .endDate(endDateTime)
                 .build();
         eventModel.addEvent(event);
+        
+        eventModel = new DefaultScheduleModel();
         
         return "meetingCreated";
     }
@@ -260,11 +263,14 @@ public class MeetingBean implements Serializable{
         this.participant = participant;
     }
 
-    public Date getToday() {
+    public String getToday() {
+        Date date = new Date();
+        SimpleDateFormat DateFor = new SimpleDateFormat("yy-MM-dd");
+        today = DateFor.format(date);
         return today;
     }
 
-    public void Today(Date today) {
+    public void Today(String today) {
         this.today = today;
     }
 

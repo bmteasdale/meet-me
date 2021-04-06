@@ -19,7 +19,7 @@ and open the template in the editor.
                 <!-- Navigation Bar -->
                 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-family: Raleway">
                     <div class="container-fluid">
-                      <a class="navbar-brand" href="/DashboardView.xhtml">MeetMe</a>
+                      <a class="navbar-brand" href="/meet-me/DashboardView.xhtml">MeetMe</a>
                       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                       </button>
@@ -87,13 +87,20 @@ and open the template in the editor.
                                                     <f:selectItems value="#{meetingBean.convertedMeetingTimes}"/>
                                                 </p:selectOneMenu>
                                             </div>
-                                            <h:commandButton value="Create Meeting" class="btn btn-outline-primary" action="#{meetingBean.createMeeting()}"/>
+                                            <p:commandButton 
+                                                value="Create Meeting" 
+                                                class="btn btn-outline-primary" 
+                                                action="#{meetingBean.createMeeting()}"
+                                                update="myForm"
+                                                oncomplete="PF('myschedule').update();PF('dlg1').hide();"/>
+                                            
                                         </h:form>
                                     </p:dialog>
                                     <div class="card">
                                         <p:growl id="messages" showDetail="true"/>
                                         <p:schedule id="schedule" value="#{userBean.eventModel}" widgetVar="myschedule"></p:schedule>
                                     </div>
+                                    
                                 </div>
                                 
                             </div>
