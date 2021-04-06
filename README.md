@@ -17,7 +17,7 @@ After the target directory has been successfully created, the payara server can 
 $ docker-compose up
 ```
 
-Now that the payara server has been successfully set up, all you need to do to view the application is go to the browser of your choice to the link "http://localhost:8080/covidCases-10-SNAPSHOT/"
+Now that the payara server has been successfully set up, all you need to do to view the application is go to the browser of your choice to the link "http://localhost:8080/MeetMe-5.13/"
 
 To later gracefully stop the payara server, press `ctrl + c` and enter the following command in the parent directory:
 ```console
