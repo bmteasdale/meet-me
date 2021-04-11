@@ -15,10 +15,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.el.ELContext;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -48,7 +46,7 @@ public class MeetingBean implements Serializable{
     private String chairPerson;
     private String attendees;
     private String participant;
-    private String today; // shows blank screen when set to current date...
+    private String today;
     private LocalTime meetingTime;
     private String convertedMeetingTime;
     private List<LocalTime> meetingTimes;
@@ -152,7 +150,24 @@ public class MeetingBean implements Serializable{
         
         dbc.addMeeting(formatDate, formatDate, convertedMeetingTime, endTime.toString(), title, description, location, ub.getUsername(), participant, json);
         addMeetingToCalendar(title, description, startTime, endTime, localDate);
-        
+        resetMeetingValues();
+    }
+    
+    public void resetMeetingValues() {
+        // To be called after a meeting is successfully scheduled.
+        meetingId = null;
+        startDate = null;
+        endDate = null;
+        startTime = null;
+        endTime = null;
+        title = null;
+        description = null;
+        location = null;
+        chairPerson = null;
+        attendees = null;
+        participant = null;
+        meetingTimes = null;
+        availableTimes = null;
     }
     
     public String addMeetingToCalendar(String title, String description, LocalTime startTime, LocalTime endTime, LocalDate date){
