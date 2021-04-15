@@ -52,6 +52,7 @@ and open the template in the editor.
                                     </div>
                                     <p:dialog id="dig1" header="Set a Meeting" widgetVar="dlg1" minHeight="40" width="500" showEffect="fade" style="font-family: Raleway;">
                                         <h:form id="myForm" style="font-family: Raleway;">
+                                            <p:growl id="meetingGrowl" showDetail="true" sticky="false"/>
                                             <f:passThroughAttribute name="autocomplete" value="off"/>
                                             <h5>What will be the meeting details?</h5><br />
                                             <div class="input-group mb-3">
@@ -71,7 +72,7 @@ and open the template in the editor.
                                                 value="Find Availabilities" 
                                                 class="btn btn-primary" 
                                                 action="#{meetingBean.findAvailabilities(meetingBean.startDate, meetingBean.participant)}" 
-                                                update="myForm"
+                                                update="myForm meetingGrowl"
                                                 style="background: #0d6efd; color: #ffffff">
                                             </p:commandButton>
                                             <br />

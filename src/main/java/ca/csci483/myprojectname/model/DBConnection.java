@@ -1,19 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ca.csci483.myprojectname.model;
 
-/**
- *
- * @author bmteasdale
- */
 import ca.csci483.myprojectname.controller.UserBean;
 import com.mysql.cj.jdbc.MysqlDataSource;
-import ca.csci483.myprojectname.model.User;
-import static com.mysql.cj.MysqlType.JSON;
-import javax.faces.bean.ManagedBean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.Connection;
@@ -30,8 +18,12 @@ import javax.faces.context.FacesContext;
 import org.primefaces.shaded.json.JSONArray;
 import org.primefaces.shaded.json.JSONObject;
 
+/**
+ * Class to establish connection to MySQL server and manage information 
+ * retrieval and updates
+ * 
+ */
 
-//@ManagedBean(name = "dbConnection")
 public class DBConnection {
     
     private final String host;
@@ -41,6 +33,10 @@ public class DBConnection {
     private final String password;
     private MysqlDataSource dataSource;
     
+    /**
+     * Default class constructor to initialize connection parameters based on 
+     * docker file provided
+     */
     public DBConnection () {
         this.host = "127.0.0.1";
         this.port = 3306;
@@ -50,6 +46,9 @@ public class DBConnection {
         connectDataSource();
     }
     
+    /**
+     * function to connect data source to the server based on given parameters
+     */
     public void connectDataSource(){
         dataSource = new MysqlDataSource();
                
@@ -64,6 +63,14 @@ public class DBConnection {
         dataSource.setPassword(this.password);        
     }
     
+    /**
+     * Function to close result set, statement, and connection. Always call this
+     * after executing a query
+     *
+     * @param rs ResultSet that reads the result of a query
+     * @param st Statement that executes the query
+     * @param cn Connection obtained from data source
+     */
     private void close(ResultSet rs, Statement st, Connection cn){
         if (rs != null){
             try {
@@ -90,6 +97,18 @@ public class DBConnection {
         }
     }
     
+    /**
+     * Function to insert new user to the database. This is done when a new 
+     * registration is to be processed.
+     * 
+     * @param username: unique username of user to be inserted
+     * @param password: password of user to be inserted
+     * @param firstName: first name of user to be inserted
+     * @param lastName: last name of user to be inserted
+     * @param email: email of user to be inserted
+     * 
+     * @return boolean value representing if insertion was successful
+     */
     public boolean registerUser(String username, String password, String firstName, String lastName, String email){
         
         Connection dbConnection = null;
@@ -122,19 +141,25 @@ public class DBConnection {
         return true;
     }
     
-    public boolean duplicateUsername(String username){
+    /**
+     * Function to retrieve user data from server for given username
+     * 
+     * @param username: email of user to retrieve
+     * 
+     * @return boolean value representing if user was found in the database
+     */
+    public boolean findUser(String username) {
+        
         Connection dbConnection = null;
         Statement dbStatement = null;
         
         try {
             dbConnection = dataSource.getConnection();
             dbStatement = dbConnection.createStatement();
-            
-            System.out.println("Connection established and statement issued");
-            String query = String.format(
-                "SELECT * FROM Users WHERE username = '%s'", username);
+            String query = String.format("SELECT * FROM Users WHERE username = '%s'", 
+                    username);
             System.out.println("Query used: " + query);
-            
+
             ResultSet result = dbStatement.executeQuery(query);
             if (result.next()) {
                 return true;
@@ -143,11 +168,21 @@ public class DBConnection {
         } catch(SQLException e) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, e);
             this.close(null, dbStatement, dbConnection);
+            return false;
         }
         this.close(null, dbStatement, dbConnection);
         return false;
     }
     
+    /**
+     * Function to retrieve user data from server for given username and 
+     * password combination
+     * 
+     * @param username: email of user to retrieve
+     * @param password: password of user to retrieve
+     * 
+     * @return User object with all information loaded.
+     */
     public User findUser (String username, String password) {
         Connection dbConnection = null;
         Statement dbStatement = null;
@@ -181,6 +216,17 @@ public class DBConnection {
         return user;
     }
     
+    /**
+     * Function to edit the users information
+     * 
+     * @param firstName: first name of user to update
+     * @param lastName: last name of user to update
+     * @param username: username of user to retrieve
+     * @param email: email of user to update
+     * @param bio: bio of user to update
+     * 
+     * @return boolean value representing if update was successful 
+     */
     public boolean editUserInfo(String firstName, String lastName, String username, String email, String bio){
         Connection dbConnection = null;
         Statement dbStatement = null;
@@ -206,6 +252,13 @@ public class DBConnection {
         return true;
     }
     
+    /**
+     * Function to retrieve a list of meetings from the database
+     * 
+     * @param userMeetingIds: list of users meeting IDs 
+     * 
+     * @return list of meetings
+     */
     public List<Meeting> findMeetings(List<String> userMeetingIds){
         Connection dbConnection = null;
         Statement dbStatement = null;
@@ -252,6 +305,13 @@ public class DBConnection {
         
     }
     
+    /**
+     * Function to retrieve a list of meetings for a user from the database
+     * 
+     * @param username: username of user
+     * 
+     * @return list of meetings
+     */
     public List<Meeting> findUserMeetings(String username){
         
         Connection dbConnection = null;
@@ -295,6 +355,22 @@ public class DBConnection {
         
     }
     
+    /**
+     * Function to insert a new meeting to the database.
+     * 
+     * @param startDate: start date of meeting to be inserted
+     * @param endDate: end date of meeting to be inserted
+     * @param startTime: start time of meeting to be inserted
+     * @param endTime: end time of meeting to be inserted
+     * @param title: title of meeting to be inserted
+     * @param description: description of meeting to be inserted
+     * @param location: location of meeting to be inserted
+     * @param chairperson: chairperson of meeting to be inserted
+     * @param participant: participant of meeting to be inserted
+     * @param attendees: attendees of meeting to be inserted
+     * 
+     * @return boolean value representing if insertion was successful
+     */
     public boolean addMeeting(String startDate, String endDate, String startTime, String endTime, String title, String description, String location, String chairperson, String participant, JSONObject attendees){
         
         Connection dbConnection = null;
@@ -336,6 +412,13 @@ public class DBConnection {
         
     }
     
+    /**
+     * Function to retrieve the last meeting ID in a users list of meeting IDs
+     * 
+     * @param username: username of user to retrieve
+     * 
+     * @return string representing the meeting ID
+     */
     public String findLastMeetingId(String username){
         
         Connection dbConnection = null;
@@ -362,6 +445,11 @@ public class DBConnection {
         return id;
     }
     
+    /**
+     * Function to add a meeting ID to a users list of meeting IDs
+     * 
+     * @param username: username of user to retrieve
+     */
     public void addMeetingIdToUser(String username){
         
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ca.csci483.myprojectname.controller;
 
 import ca.csci483.myprojectname.model.DBConnection;
@@ -19,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import javax.el.ELContext;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.primefaces.model.DefaultScheduleEvent;
@@ -29,29 +25,30 @@ import org.primefaces.shaded.json.JSONArray;
 import org.primefaces.shaded.json.JSONObject;
 
 /**
- *
- * @author Rachel
+ * This class...
+ * 
  */
 @SessionScoped
 @Named("meetingBean")
 public class MeetingBean implements Serializable{
-    private String meetingId;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private String title;
-    private String description;
-    private String location;
-    private String chairPerson;
-    private String attendees;
-    private String participant;
-    private String today;
-    private LocalTime meetingTime;
-    private String convertedMeetingTime;
-    private List<LocalTime> meetingTimes;
-    private List<String> convertedMeetingTimes;
-    private List<LocalTime> availableTimes;
+    private String meetingId;       // unique ID of the meeting
+    private LocalDate startDate;    // start date of the meeting
+    private LocalDate endDate;      // end date of the meeting
+    private LocalTime startTime;    // start time of the meeting
+    private LocalTime endTime;      // end time of the meeting
+    private String title;           // title of the meeting
+    private String description;     // description of the meeting
+    private String location;        // location of the meeting
+    private String chairPerson;     // chairperson of the meeting
+    private String attendees;       // all attendees of the meeting (chairperson + participants)
+    private String participant;     // participants of the meeting
+    private String today;           // todays date
+    
+    private LocalTime meetingTime;              // time of meeting (hh:mm:ss)       
+    private String convertedMeetingTime;        // time of meeting ("hh:mm:ss")
+    private List<LocalTime> meetingTimes;       // list of all meeting times (hh:mm:ss)
+    private List<String> convertedMeetingTimes; // list of all meeting times ("hh:mm:ss")
+    private List<LocalTime> availableTimes;     // list of all available meeting times
     
     private ScheduleModel eventModel;
     private ScheduleEvent<?> event = new DefaultScheduleEvent<>();
@@ -59,6 +56,13 @@ public class MeetingBean implements Serializable{
     public MeetingBean(){
     }
     
+    /**
+     * Function to find meeting times that work for both the chairperson and the
+     * participant
+     *
+     * @param date: date of the meeting
+     * @param username: username of the participant of the meeting
+     */
     public void findAvailabilities(LocalDate date, String username){
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         UserBean ub = (UserBean) FacesContext.getCurrentInstance().getApplication().getELResolver().getValue(elContext, null, "userBean");
@@ -69,56 +73,71 @@ public class MeetingBean implements Serializable{
                                      LocalTime.of(16,00,00), LocalTime.of(17,00,00));
         String formattedDate = date.format(DateTimeFormatter.ofPattern("00YY-MM-dd"));
         
-        List<LocalTime> availableTimes = new ArrayList<>();
-        for (int i = 0; i < ub.getAllUserMeetings().size(); i++) {
+        if (dbc.findUser(username) == true){
             
-            Meeting currentMeeting = ub.getAllUserMeetings().get(i);
-            String mFormattedDate = currentMeeting.getStartDate().format(DateTimeFormatter.ofPattern("00YY-MM-dd"));
-            
-            if(formattedDate.equals(mFormattedDate)){
-                LocalTime startTime = currentMeeting.getStartTime();
-                LocalTime endTime = currentMeeting.getEndTime();
-                
-                for (int j = 0; j < meetingTimes.size(); j++){
-                    LocalTime checkTime = meetingTimes.get(j);
-                    
-                   // if (checkTime.isAfter(startTime) && checkTime.isBefore(endTime)){
-                    if ((checkTime != startTime) && !availableTimes.contains(checkTime)){
-                        availableTimes.add(checkTime);
+            // find available times for chairperson
+            List<LocalTime> availableTimes = new ArrayList<>();
+            for (int i = 0; i < ub.getAllUserMeetings().size(); i++) {
+
+                Meeting currentMeeting = ub.getAllUserMeetings().get(i);
+                String mFormattedDate = currentMeeting.getStartDate().format(DateTimeFormatter.ofPattern("00YY-MM-dd"));
+
+                if(formattedDate.equals(mFormattedDate)){
+                    LocalTime startTime = currentMeeting.getStartTime();
+                    LocalTime endTime = currentMeeting.getEndTime();
+
+                    for (int j = 0; j < meetingTimes.size(); j++){
+                        LocalTime checkTime = meetingTimes.get(j);
+
+                        if ((checkTime != startTime) && !availableTimes.contains(checkTime)){
+                            availableTimes.add(checkTime);
+                        }
+
                     }
-                    
+                    meetingTimes = availableTimes;
+                    availableTimes = new ArrayList<>();
                 }
-                meetingTimes = availableTimes;
-                availableTimes = new ArrayList<>();
+
             }
+
+            // find available times for participant
+            List<Meeting> newUserMeetings = dbc.findUserMeetings(username);
+            for (int i = 0; i < newUserMeetings.size(); i++) {
+                Meeting newCurrentMeeting = newUserMeetings.get(i);
+                String nmFormattedDate = newCurrentMeeting.getStartDate().format(DateTimeFormatter.ofPattern("00YY-MM-dd"));
+
+                if(formattedDate.equals(nmFormattedDate)){
+                    LocalTime startTime = newCurrentMeeting.getStartTime();
+                    LocalTime endTime = newCurrentMeeting.getEndTime();
+
+                    for (int j = 0; j < meetingTimes.size(); j++){  
+                        LocalTime checkTime = meetingTimes.get(j);
+
+                        if(checkTime != startTime){
+                            availableTimes.add(checkTime);
+                        }
+
+                    }
+                    meetingTimes = availableTimes;
+                    availableTimes = new ArrayList<>();
+                }
+            }
+            convertMeetingTimes(meetingTimes);
             
+        }
+        else {
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage("Error", "This user does not exist!"));
         }
         
-        // put this in a for loop for multiple users
-        List<Meeting> newUserMeetings = dbc.findUserMeetings(username);
-        for (int i = 0; i < newUserMeetings.size(); i++) {
-            Meeting newCurrentMeeting = newUserMeetings.get(i);
-            String nmFormattedDate = newCurrentMeeting.getStartDate().format(DateTimeFormatter.ofPattern("00YY-MM-dd"));
-            
-            if(formattedDate.equals(nmFormattedDate)){
-                LocalTime startTime = newCurrentMeeting.getStartTime();
-                LocalTime endTime = newCurrentMeeting.getEndTime();
-                
-                for (int j = 0; j < meetingTimes.size(); j++){  
-                    LocalTime checkTime = meetingTimes.get(j);
-                    
-                    if(checkTime != startTime){
-                        availableTimes.add(checkTime);
-                    }
-                    
-                }
-                meetingTimes = availableTimes;
-                availableTimes = new ArrayList<>();
-            }
-        }
-        convertMeetingTimes(meetingTimes);
     }
     
+    /**
+     * Function to convert the meeting times from a list of LocalTime variables 
+     * to a list of String variables. 
+     *
+     * @param meetingTimes: List of meeting times
+     */
     public void convertMeetingTimes(List<LocalTime> meetingTimes){
         convertedMeetingTimes = new ArrayList<>();
         for (int i = 0; i < meetingTimes.size(); i++) {
@@ -128,11 +147,16 @@ public class MeetingBean implements Serializable{
         }
     }
     
+    /**
+     * Function to create a new meeting.
+     */
     public void createMeeting(){
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         UserBean ub = (UserBean) FacesContext.getCurrentInstance().getApplication().getELResolver().getValue(elContext, null, "userBean");
         DBConnection dbc = new DBConnection();
         
+        // FIX THIS - attendees = chairperson + participant
+        // format the list of attendees
         String formatAttendees = "{'ids': ['" + participant + "']}";
         
         JSONObject json = new JSONObject();
@@ -141,6 +165,7 @@ public class MeetingBean implements Serializable{
         array.put(participant);
         json.put("ids", array);
         
+        // format the start/end date
         String formatDate = startDate.format(DateTimeFormatter.ofPattern("YY-MM-dd"));
         formatDate = "20" + formatDate;
         
@@ -153,8 +178,12 @@ public class MeetingBean implements Serializable{
         resetMeetingValues();
     }
     
+    /**
+     * Function to reset meeting values after a meeting has been successfully 
+     * scheduled.
+     *
+     */
     public void resetMeetingValues() {
-        // To be called after a meeting is successfully scheduled.
         meetingId = null;
         startDate = null;
         endDate = null;
@@ -170,9 +199,18 @@ public class MeetingBean implements Serializable{
         availableTimes = null;
     }
     
+    /**
+     * Function to add a new meeting to the calendar.
+     * 
+     * @param title: title of the new meeting
+     * @param description: description of the new meeting
+     * @param startTime: start time of the new meeting
+     * @param endTime: end time of the new meeting
+     * @param date: date of the new meeting
+     * 
+     * @return String representing the name of page to be rendered
+     */
     public String addMeetingToCalendar(String title, String description, LocalTime startTime, LocalTime endTime, LocalDate date){
-        
-        //eventModel = new DefaultScheduleModel();
         
         LocalDateTime startDateTime = LocalDateTime.of(date, startTime);
         LocalDateTime endDateTime = LocalDateTime.of(date, endTime);
@@ -189,6 +227,8 @@ public class MeetingBean implements Serializable{
         
         return "meetingCreated";
     }
+    
+    // Getters & Setters
     
     public String getMeetingId() {
         return meetingId;
@@ -296,7 +336,7 @@ public class MeetingBean implements Serializable{
     public void setMeetingTime(LocalTime meetingTime) {
         this.meetingTime = meetingTime;
     }
-
+    
     public List<LocalTime> getMeetingTimes() {
         return meetingTimes;
     }

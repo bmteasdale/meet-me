@@ -1,15 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ca.csci483.myprojectname.controller;
 
 import ca.csci483.myprojectname.model.DBConnection;
 import ca.csci483.myprojectname.model.Meeting;
 import ca.csci483.myprojectname.model.User;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -23,26 +17,26 @@ import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
 /**
- *
- * @author bmteasdale
+ * This class...
+ * 
  */
 @SessionScoped
 @Named("userBean")
 public class UserBean implements Serializable {
-    private String username;
-    private String password;
-    private String confirmPassword;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String bio;  
+    private String username;        // username of current user
+    private String password;        // password of current user
+    private String confirmPassword; // confirmed password of current user
+    private String firstName;       // first name of current user
+    private String lastName;        // last name of current user
+    private String email;           // email of current user
+    private String bio;             // bio of current user
     
-    private String userMeetingIds;
-    private List<String> userMeetingIdsList;
-    private List<Meeting> allUserMeetings;
+    private String userMeetingIds;              // IDs of meetings that the user is an attendee in
+    private List<String> userMeetingIdsList;    // IDs of meetings in the form of a list
+    private List<Meeting> allUserMeetings;      // List of meetings that the user is an attendee in
     
-    private boolean successfulRegistration;
-    private boolean successfulLogin;
+    private boolean successfulRegistration;     // boolean value representing if the registration was successful
+    private boolean successfulLogin;            // boolean value representing if the login was successful
     
     private ScheduleModel eventModel;
     private ScheduleEvent<?> event = new DefaultScheduleEvent<>();
@@ -50,6 +44,18 @@ public class UserBean implements Serializable {
     public UserBean(){
     }
     
+    /**
+     * Function to register a new user.
+     *
+     * @param firstName: first name of the new user
+     * @param lastName: last name of the new user
+     * @param username: unique username of the new user
+     * @param email: email address of the new user
+     * @param password: password of the new user
+     * @param confirmPassword: conformation password of the new user
+     * 
+     * @return String representing the name of page to be rendered
+     */
     public String handleRegistration(String firstName, String lastName, String username, String email, String password, String confirmPassword){
         
         this.firstName = firstName;
@@ -60,7 +66,7 @@ public class UserBean implements Serializable {
         this.confirmPassword = confirmPassword;
         
         DBConnection dbc = new DBConnection();
-        boolean duplicateUsername = dbc.duplicateUsername(username);
+        boolean duplicateUsername = dbc.findUser(username);
         boolean validRegistration = password.equals(confirmPassword);
         
         if(validRegistration && !duplicateUsername) {
@@ -82,6 +88,9 @@ public class UserBean implements Serializable {
         return "registrationSuccess";
     }
     
+    /**
+     * Function show messages when registering
+     */
     public void showRegistrationMessage(String message){
         FacesContext context = FacesContext.getCurrentInstance();
         
@@ -95,6 +104,9 @@ public class UserBean implements Serializable {
         
     }
     
+    /**
+     * Function show messages when logging in
+     */
     public void showLoginMessage(){
         FacesContext context = FacesContext.getCurrentInstance();
         
@@ -107,6 +119,15 @@ public class UserBean implements Serializable {
         
     }
     
+    /**
+     * Function to allow or deny a user to login depending on the validity of
+     * their login credentials.
+     * 
+     * @param username: username of user logging in
+     * @param password: password of user logging in
+     * 
+     * @return String representing the name of page to be rendered
+     */
     public String loginValidation(String username, String password) {
         this.successfulLogin = false;
         DBConnection dbc = new DBConnection();
@@ -132,6 +153,11 @@ public class UserBean implements Serializable {
         return "fail";
     }
     
+    /**
+     * Function to add the users meetings to the calendar
+     * 
+     * @param meetings: List of meetings that the user is an attendee in
+     */
     public void addMeetingsToCalendar(List<Meeting> meetings){
         
         eventModel = new DefaultScheduleModel();
@@ -156,6 +182,14 @@ public class UserBean implements Serializable {
         
     }
     
+    /**
+     * Function to parse the users meeting IDs from a String into a list of 
+     * String variables
+     * 
+     * @param ids: String of meeting IDs
+     * 
+     * @return List of meeting IDs
+     */
     public List<String> parseUserMeetingIds(String ids) {
     
         List<String> allIds = null;
@@ -178,14 +212,19 @@ public class UserBean implements Serializable {
         return allIds;
     }
     
+    /**
+     * Function to edit the current users information
+     * 
+     * @param firstName: first name of the user
+     * @param username: username of the user
+     * @param email: email of the user
+     * @param bio: bio of the user
+     * 
+     * @return String representing the name of page to be rendered
+     */
     public String editUserInfo(String firstName, String username, String email, String bio){
         
-        /* Fix:
-            - full name
-            - username duplication
-        */
-        
-        DBConnection dbc = new DBConnection();
+         DBConnection dbc = new DBConnection();
         boolean editUserSuccess = dbc.editUserInfo(firstName, lastName, username, email, bio);
         
         if(editUserSuccess == false){
@@ -198,6 +237,9 @@ public class UserBean implements Serializable {
         }
     }
     
+    /**
+     * Function to reset all of the user values 
+     */
     public String logout() {
         this.successfulLogin = false;
         this.firstName = null;
@@ -209,19 +251,15 @@ public class UserBean implements Serializable {
         return "logout";
     }
     
+    /**
+     * Function to display a message
+     */
     public void showMessage(String title, String message){
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(title, message));
     }
         
-    public boolean isSuccessfulLogin() {
-        return successfulLogin;
-    }
-
-    public void setSuccessfulLogin(boolean successfulLogin) {
-        this.successfulLogin = successfulLogin;
-    }
-    
+    // Getters & Setters
     
     public String getUsername() {
         return username;
@@ -285,6 +323,14 @@ public class UserBean implements Serializable {
 
     public void setSuccessfulRegistration(boolean successfulRegistration) {
         this.successfulRegistration = successfulRegistration;
+    }
+    
+    public boolean isSuccessfulLogin() {
+        return successfulLogin;
+    }
+
+    public void setSuccessfulLogin(boolean successfulLogin) {
+        this.successfulLogin = successfulLogin;
     }
 
     public String getUserMeetingIds() {

@@ -1,27 +1,23 @@
 package ca.csci483.myprojectname.model;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 import java.io.Serializable;
 
 /**
- *
- * @author osoufan
+ * This class holds the data of a user.
+ * 
  */
 public class User implements Serializable{
     
-    private String username; 
-    private String password;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String bio;
-    private String userMeetingIds;
+    private String username;    // unique username of the user
+    private String password;    // password of the user
+    private String firstName;   // first name of the user
+    private String lastName;    // last name of the user
+    private String email;       // email address of the user
+    private String bio;         // bio of the user
+    private String userMeetingIds;  // IDs of the meetings that the user is a participant in
 
+    // Constructor
+    
     public User(String username, String password, String firstName, String lastName, String email) {
         this.username = username;
         this.password = password;
@@ -43,6 +39,8 @@ public class User implements Serializable{
     User() {
     }
 
+    // Getters & Setters
+    
     public String getPassword() {
         return password;
     }

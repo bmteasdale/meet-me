@@ -1,32 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ca.csci483.myprojectname.model;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.List;
 
 /**
- *
- * @author Rachel
+ * This class holds the data of a meeting.
+ * 
  */
 public class Meeting implements Serializable{
-    private String meetingId;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private String title;
-    private String description;
-    private String location;
-    private String chairPerson;
-    private String attendees;
+    private String meetingId;       // unique ID of the meeting
+    private LocalDate startDate;    // start date of the meeting
+    private LocalDate endDate;      // end date of the meeting
+    private LocalTime startTime;    // start time of the meeting
+    private LocalTime endTime;      // end time of the meeting
+    private String title;           // title of the meeting
+    private String description;     // description of the meeting
+    private String location;        // location of the meeting
+    private String chairPerson;     // chairperson of the meeting
+    private String attendees;       // attendees of the meeting
+    
+    // Constructor
     
     public Meeting(String meetingId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, String title, String description, String location, String chairperson, String attendees){
         this.meetingId = meetingId;
@@ -43,6 +37,8 @@ public class Meeting implements Serializable{
     
     Meeting(){
     }
+    
+    // Getters & Setters
 
     public String getMeetingId() {
         return meetingId;
