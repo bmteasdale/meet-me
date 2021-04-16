@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 /**
+ * @author Rachel
  * This class holds the data of a meeting.
- * 
  */
 public class Meeting implements Serializable{
     private String meetingId;       // unique ID of the meeting

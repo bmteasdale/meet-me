@@ -10,7 +10,7 @@ services:
     environment: 
       MYSQL_ROOT_PASSWORD: admin
     volumes:
-      - ./sql_script:/docker-entrypoint-initdb.d
+      - ./database/meet-me_dump.sql:/docker-entrypoint-initdb.d/meet-me_dump.sql
   
   
   app:

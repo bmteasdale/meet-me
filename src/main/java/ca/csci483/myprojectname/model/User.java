@@ -3,8 +3,8 @@ package ca.csci483.myprojectname.model;
 import java.io.Serializable;
 
 /**
+ * @author bmteasdale
  * This class holds the data of a user.
- * 
  */
 public class User implements Serializable{
     

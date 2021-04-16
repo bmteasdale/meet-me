@@ -17,8 +17,8 @@ import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
 /**
- * This class...
- * 
+ * @author bmteasdale
+ * This class holds the data of the current user visiting the website.
  */
 @SessionScoped
 @Named("userBean")
@@ -31,9 +31,9 @@ public class UserBean implements Serializable {
     private String email;           // email of current user
     private String bio;             // bio of current user
     
-    private String userMeetingIds;              // IDs of meetings that the user is an attendee in
+    private String userMeetingIds;              // IDs of meetings that the user is attending
     private List<String> userMeetingIdsList;    // IDs of meetings in the form of a list
-    private List<Meeting> allUserMeetings;      // List of meetings that the user is an attendee in
+    private List<Meeting> allUserMeetings;      // List of meetings that the user is attending
     
     private boolean successfulRegistration;     // boolean value representing if the registration was successful
     private boolean successfulLogin;            // boolean value representing if the login was successful
@@ -89,7 +89,7 @@ public class UserBean implements Serializable {
     }
     
     /**
-     * Function show messages when registering
+     * Function to show registration messages
      */
     public void showRegistrationMessage(String message){
         FacesContext context = FacesContext.getCurrentInstance();
@@ -100,21 +100,6 @@ public class UserBean implements Serializable {
         }
         else {
             context.addMessage(null, new FacesMessage("Error", message));
-        }
-        
-    }
-    
-    /**
-     * Function show messages when logging in
-     */
-    public void showLoginMessage(){
-        FacesContext context = FacesContext.getCurrentInstance();
-        
-        if (this.successfulLogin == true){
-            context.addMessage(null, new FacesMessage("Success", "Successful Login!"));
-        }
-        else {
-            context.addMessage(null, new FacesMessage("Error", "Sorry, we could't find an account with those credentials!"));
         }
         
     }
@@ -154,9 +139,24 @@ public class UserBean implements Serializable {
     }
     
     /**
+     * Function show messages when logging in
+     */
+    public void showLoginMessage(){
+        FacesContext context = FacesContext.getCurrentInstance();
+        
+        if (this.successfulLogin == true){
+            context.addMessage(null, new FacesMessage("Success", "Successful Login!"));
+        }
+        else {
+            context.addMessage(null, new FacesMessage("Error", "Sorry, we could't find an account with those credentials!"));
+        }
+        
+    }
+    
+    /**
      * Function to add the users meetings to the calendar
      * 
-     * @param meetings: List of meetings that the user is an attendee in
+     * @param meetings: List of meetings that the user is attending
      */
     public void addMeetingsToCalendar(List<Meeting> meetings){
         
@@ -168,7 +168,6 @@ public class UserBean implements Serializable {
             
             LocalDateTime startDateTime = LocalDateTime.of(currentMeeting.getStartDate(), currentMeeting.getStartTime());
             LocalDateTime endDateTime = LocalDateTime.of(currentMeeting.getEndDate(), currentMeeting.getEndTime());
-            
             
             event = DefaultScheduleEvent.builder()
                     .title(currentMeeting.getTitle())
@@ -183,7 +182,7 @@ public class UserBean implements Serializable {
     }
     
     /**
-     * Function to parse the users meeting IDs from a String into a list of 
+     * Function to convert the users meeting IDs from a String into a list of 
      * String variables
      * 
      * @param ids: String of meeting IDs
@@ -224,7 +223,7 @@ public class UserBean implements Serializable {
      */
     public String editUserInfo(String firstName, String username, String email, String bio){
         
-         DBConnection dbc = new DBConnection();
+        DBConnection dbc = new DBConnection();
         boolean editUserSuccess = dbc.editUserInfo(firstName, lastName, username, email, bio);
         
         if(editUserSuccess == false){
@@ -259,6 +258,7 @@ public class UserBean implements Serializable {
         context.addMessage(null, new FacesMessage(title, message));
     }
         
+    
     // Getters & Setters
     
     public String getUsername() {
@@ -372,6 +372,5 @@ public class UserBean implements Serializable {
     public void setEvent(ScheduleEvent<?> event) {
         this.event = event;
     }
-    
     
 }

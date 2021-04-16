@@ -25,8 +25,8 @@ import org.primefaces.shaded.json.JSONArray;
 import org.primefaces.shaded.json.JSONObject;
 
 /**
- * This class...
- * 
+ * @author Rachel
+ * This class holds the data of the current meeting that the user is scheduling.
  */
 @SessionScoped
 @Named("meetingBean")
@@ -42,12 +42,12 @@ public class MeetingBean implements Serializable{
     private String chairPerson;     // chairperson of the meeting
     private String attendees;       // all attendees of the meeting (chairperson + participants)
     private String participant;     // participants of the meeting
-    private String today;           // todays date
+    private String today;           // current date
     
     private LocalTime meetingTime;              // time of meeting (hh:mm:ss)       
-    private String convertedMeetingTime;        // time of meeting ("hh:mm:ss")
+    private String convertedMeetingTime;        // time of meeting converted into a String ("hh:mm:ss")
     private List<LocalTime> meetingTimes;       // list of all meeting times (hh:mm:ss)
-    private List<String> convertedMeetingTimes; // list of all meeting times ("hh:mm:ss")
+    private List<String> convertedMeetingTimes; // list of all meeting times converted into a String ("hh:mm:ss")
     private List<LocalTime> availableTimes;     // list of all available meeting times
     
     private ScheduleModel eventModel;
@@ -68,9 +68,11 @@ public class MeetingBean implements Serializable{
         UserBean ub = (UserBean) FacesContext.getCurrentInstance().getApplication().getELResolver().getValue(elContext, null, "userBean");
         DBConnection dbc = new DBConnection();
         
+        // timeblocks that the user can choose from
         meetingTimes = Arrays.asList(LocalTime.of(8,00,00), LocalTime.of(9,00,00), LocalTime.of(10,00,00), LocalTime.of(11,00,00),
                                      LocalTime.of(12,00,00), LocalTime.of(13,00,00), LocalTime.of(14,00,00), LocalTime.of(15,00,00),
                                      LocalTime.of(16,00,00), LocalTime.of(17,00,00));
+        
         String formattedDate = date.format(DateTimeFormatter.ofPattern("00YY-MM-dd"));
         
         if (dbc.findUser(username) == true){
@@ -94,8 +96,8 @@ public class MeetingBean implements Serializable{
                         }
 
                     }
-                    meetingTimes = availableTimes;
-                    availableTimes = new ArrayList<>();
+                    meetingTimes = availableTimes; // set list of timeblocks to the list of available timeblocks for the chairperson
+                    availableTimes = new ArrayList<>(); // reset the list of available timeblocks
                 }
 
             }
@@ -118,8 +120,8 @@ public class MeetingBean implements Serializable{
                         }
 
                     }
-                    meetingTimes = availableTimes;
-                    availableTimes = new ArrayList<>();
+                    meetingTimes = availableTimes; // set current list of timeblocks to list of available timeblocks for participant
+                    availableTimes = new ArrayList<>(); // reset list of available timeblocks
                 }
             }
             convertMeetingTimes(meetingTimes);
@@ -155,20 +157,16 @@ public class MeetingBean implements Serializable{
         UserBean ub = (UserBean) FacesContext.getCurrentInstance().getApplication().getELResolver().getValue(elContext, null, "userBean");
         DBConnection dbc = new DBConnection();
         
-        // FIX THIS - attendees = chairperson + participant
-        // format the list of attendees
-        String formatAttendees = "{'ids': ['" + participant + "']}";
-        
+        // create list of attendees
         JSONObject json = new JSONObject();
         JSONArray array = new JSONArray();
-        
+        array.put(ub.getUsername());
         array.put(participant);
         json.put("ids", array);
         
         // format the start/end date
         String formatDate = startDate.format(DateTimeFormatter.ofPattern("YY-MM-dd"));
         formatDate = "20" + formatDate;
-        
         startTime = LocalTime.parse(convertedMeetingTime);
         endTime = startTime.plusHours(1);
         LocalDate localDate = LocalDate.parse(formatDate);
@@ -227,6 +225,7 @@ public class MeetingBean implements Serializable{
         
         return "meetingCreated";
     }
+    
     
     // Getters & Setters
     

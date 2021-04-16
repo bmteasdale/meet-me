@@ -19,9 +19,11 @@ import org.primefaces.shaded.json.JSONArray;
 import org.primefaces.shaded.json.JSONObject;
 
 /**
+ * @author bmteasdale
+ * @author Rachel
+ * 
  * Class to establish connection to MySQL server and manage information 
  * retrieval and updates
- * 
  */
 
 public class DBConnection {
@@ -47,7 +49,7 @@ public class DBConnection {
     }
     
     /**
-     * function to connect data source to the server based on given parameters
+     * Function to connect data source to the server based on given parameters
      */
     public void connectDataSource(){
         dataSource = new MysqlDataSource();
@@ -64,8 +66,7 @@ public class DBConnection {
     }
     
     /**
-     * Function to close result set, statement, and connection. Always call this
-     * after executing a query
+     * Function to close result set, statement, and connection.
      *
      * @param rs ResultSet that reads the result of a query
      * @param st Statement that executes the query
@@ -327,12 +328,14 @@ public class DBConnection {
             
             String query = String.format("SELECT * FROM Users WHERE username = '%s'",
                     username);
-                System.out.println("Query used: " + query);
+            System.out.println("Query used: " + query);
             
             
             ResultSet result = dbStatement.executeQuery(query);
             if (result.next()) {
                 ids = result.getString("meeting_ids");
+                
+                // convert ids from a String into a list of String variables
                 ids = ids.substring(ids.indexOf(('{')) + 1);
                 ids = ids.substring(0, ids.indexOf(('}')));
                 ids = ids.substring(ids.indexOf((':')) + 1);
@@ -356,7 +359,7 @@ public class DBConnection {
     }
     
     /**
-     * Function to insert a new meeting to the database.
+     * Function to insert a new meeting into the database.
      * 
      * @param startDate: start date of meeting to be inserted
      * @param endDate: end date of meeting to be inserted
@@ -413,7 +416,8 @@ public class DBConnection {
     }
     
     /**
-     * Function to retrieve the last meeting ID in a users list of meeting IDs
+     * Function to retrieve the id of the last meeting that has been added to 
+     * the database
      * 
      * @param username: username of user to retrieve
      * 
@@ -456,6 +460,7 @@ public class DBConnection {
         UserBean ub = (UserBean) FacesContext.getCurrentInstance().getApplication().getELResolver().getValue(elContext, null, "userBean");
         String ids = ub.getUserMeetingIds();
         
+        // convert ids from a String into a list of String variables
         List<String> allIds = null;
         ids = ids.substring(ids.indexOf(('{')) + 1);
         ids = ids.substring(0, ids.indexOf(('}')));
