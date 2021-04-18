@@ -40,7 +40,7 @@ public class DBConnection {
      * docker file provided
      */
     public DBConnection () {
-        this.host = "mysqlserver";
+        this.host = "127.0.0.1";
         this.port = 3306;
         this.databaseName = "meetme";
         this.username = "admin";
