@@ -4,25 +4,14 @@
 > ## Project Requirements:
 > - [MySQL](https://www.mysql.com/downloads/)
 > - [Apache Maven](https://maven.apache.org/download.cgi)
-> - [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
-> - [Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
 
-To build the project and package the resulting JAR file into the target directory, run the following command in the parent directory:
-```console
-$ mvn package
-```
+Open the project in NetBeans12.0.
 
-After the target directory has been successfully created, the payara server can be started by running the following command:
-```console
-$ docker-compose up
-```
+Start the MySQL server and create the database using the script ```meet-me_dump.sql```.
 
-Now that the payara server has been successfully set up, all you need to do to view the application is go to the browser of your choice to the link "http://localhost:8080/MeetMe-5.13/"
+Go to ```DBConnection.java``` and update the connection parameters in the constructor.
 
-To later gracefully stop the payara server, press `ctrl + c` and enter the following command in the parent directory:
-```console
-$ docker-compose down
-```
+Run the project.
 
 ## Project Workflow
 ![Worrkflow Diagram](projectWorkflow.png)
